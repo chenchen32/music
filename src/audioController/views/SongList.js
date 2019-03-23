@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import SongItem from './SongItem'
-import {getCurrentSongInfo} from '../../untils'
+import {getCurrentSongInfo} from '../../utils'
 
 class SongList extends Component {
-
     autoScrollLyricList(div, currentLyricIndex) {
         if (div !== null) {
             let {height} = div.getBoundingClientRect()

@@ -132,7 +132,7 @@ body::-webkit-scrollbar-thumb {
     position: absolute;
     bottom: 0;
     background: rgb(192, 12, 12);
-    width: 0%;
+    width: 0;
     height: 100%;
 }
 
@@ -193,9 +193,9 @@ body::-webkit-scrollbar-thumb {
 
 .volume-slider .slider-progress {
     position: absolute;
-    top: 0px;
+    top: 0;
     background: rgb(25, 25, 25);
-    height: 0%;
+    height: 0;
     width: 5px;
     border-radius: 5px;
 }
@@ -214,7 +214,7 @@ body::-webkit-scrollbar-thumb {
     float: left;
     width: 30px;
     height: 30px;
-    margin: 0px 5px 0 5px;
+    margin: 0 5px 0 5px;
     text-indent: -9999px;
 }
 
@@ -229,7 +229,7 @@ body::-webkit-scrollbar-thumb {
     bottom: 0;
     background: #000;
     font-family: poppin,Tahoma,Arial,\5FAE\8F6F\96C5\9ED1,sans-serif;
-    z-index: 1;
+    z-index: 2;
 }
 
 .song-list-header {

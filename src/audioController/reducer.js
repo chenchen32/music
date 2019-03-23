@@ -1,5 +1,5 @@
 import * as audioController from './actionTypes'
-import {saveSongToLocalStorage, deleteSongInLocalStorage} from "../untils"
+import {saveSongToLocalStorage, deleteSongInLocalStorage} from "../utils"
 
 export default (state, action) => {
     switch (action.type) {

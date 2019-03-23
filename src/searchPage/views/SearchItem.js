@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {getCurrentSongInfo, timeFormat} from '../../untils'
+import {getCurrentSongInfo, timeFormat} from '../../utils'
 import {connect} from 'react-redux'
 import {actions} from '../../audioController/'
 

@@ -16,7 +16,7 @@ class Menu extends Component {
     render() {
         let searchContent = this.props.searchContent
         let searchPath = `?s=${searchContent}`
-        if (searchContent === '') {
+        if (searchContent === '' || searchContent === undefined) {
             searchPath = ''
         }
         let menus = [

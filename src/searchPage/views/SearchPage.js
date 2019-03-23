@@ -39,7 +39,7 @@ class SearchPage extends Component {
     }
 
     componentWillUpdate(nextProps, nextState, nextContext) {
-        if (nextProps.location !== this.props.location) {
+        if (nextProps.location.search !== this.props.location.search) {
             let location = nextProps.location
             let o = this.getSearchContent(location)
             let {s} = {...o}

@@ -44,7 +44,7 @@ class SearchBar extends Component {
     }
 
     componentWillUpdate(nextProps, nextState, nextContext) {
-        if (nextProps.location !== this.props.location) {
+        if (nextProps.location.search !== this.props.location.search) {
             let location = nextProps.location
             this.value = this.parseUrlGetSearchContent(location)
         }

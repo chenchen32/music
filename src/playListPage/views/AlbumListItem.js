@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {getCurrentSongInfo} from "../../untils"
+import {getCurrentSongInfo} from "../../utils"
 
 class AlbumListItem extends Component {
     constructor(props) {

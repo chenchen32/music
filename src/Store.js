@@ -4,7 +4,7 @@ import {reducer as PlayListReducer} from './playListPage/'
 import {reducer as AudioReducer} from './audioController/'
 import thunkMiddleware from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import {loadSongListInLocalStorage} from './untils'
+import {loadSongListInLocalStorage} from './utils'
 
 const initValue = {
     SearchBarReducer: {
@@ -32,7 +32,6 @@ const initValue = {
             pic: "http://s4.music.126.net/style/web2/img/default/default_album.jpg",
             url: null,
             time: null,
-            shouldPlay: false,
         },
     },
 }

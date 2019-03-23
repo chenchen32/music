@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {timeFormat, getCurrentSongInfo} from '../../untils'
+import {timeFormat, getCurrentSongInfo} from '../../utils'
 import {connect} from "react-redux"
 import {playTheSongInList, deleteTheSong} from '../actions'
 

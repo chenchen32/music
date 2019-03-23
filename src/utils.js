@@ -10,8 +10,7 @@ export const timeFormat = function(seconds) {
     if (m.length === 1) {
         m = "0" + m
     }
-    let time = `${m}:${s}`
-    return time
+    return `${m}:${s}`
 }
 
 export const loadSongListInLocalStorage = () => {

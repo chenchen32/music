@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {changeAudioStatus, getLyricFromNet, saveCurrentLyricIndex, changePlayMode, playNextSong} from "../actions"
-import {timeFormat, getCurrentSongInfo} from '../../untils'
+import {timeFormat, getCurrentSongInfo} from '../../utils'
 
 class AudioController extends Component {
     constructor(props) {
@@ -55,6 +55,9 @@ class AudioController extends Component {
         })
         a.addEventListener('ended', () => {
             this.props.playNextSong(this.props.playMode)
+            if (this.props.lengthOfSongList === 1 || this.props.playMode === 'circle') {
+                a.play()
+            }
         })
     }
 
@@ -196,8 +199,11 @@ class AudioController extends Component {
     toggleList() {
         let list = document.querySelector('.song-list')
         list.classList.toggle('hidden')
-        let body = document.querySelector("body")
-        body.classList.toggle('ban-scroll')
+        let pop = document.querySelector('.pop-up')
+        if (pop === null) {
+            let body = document.querySelector("body")
+            body.classList.toggle('ban-scroll')
+        }
         let musicPlayer = document.querySelector('.audio-controller')
         musicPlayer.classList.toggle('playlist-opened')
     }
@@ -251,7 +257,7 @@ class AudioController extends Component {
 
     render() {
         let {currentTime, duration} = this.state
-        let {name, singer, pic, url, shouldPlay} = this.props.currentSongInfo
+        let {name, singer, pic, url} = this.props.currentSongInfo
         let playMode = this.props.playMode
         let mapEnglishToChinese = {
             loop: '列表循环',
@@ -261,7 +267,7 @@ class AudioController extends Component {
         let playModeTitle = mapEnglishToChinese[this.props.playMode]
         return (
             <div className="audio-controller">
-                <audio src={url} ref={this.audio} autoPlay={shouldPlay}>
+                <audio src={url} ref={this.audio}>
                 </audio>
                 <div className="album-cover">
                     <img src={pic} alt="专辑图片" />
@@ -325,7 +331,9 @@ class AudioController extends Component {
 const mapStateToProps = (state) => {
     let theState = state.AudioReducer
     let currentSongInfo = getCurrentSongInfo(theState)
+    let lengthOfSongList = theState.songList.length
     return {
+        lengthOfSongList: lengthOfSongList,
         AudioStatus: theState.AudioStatus,
         currentSongInfo: currentSongInfo,
         currentSongExtraInfo: theState.currentSongExtraInfo,
