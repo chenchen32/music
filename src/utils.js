@@ -47,3 +47,32 @@ export const getCurrentSongInfo = (theState) => {
     }
     return currentSongInfo
 }
+
+export const parseLyric = (lyricsArray) => {
+    let result = []
+    for (let i = 0; i < lyricsArray.length; i++) {
+        let oneLyricString = lyricsArray[i]
+        let oneLyric = ''
+        let time = -1
+        for (let j = 0; j < oneLyricString.length; j++) {
+            let e = oneLyricString[j]
+            if (e === ']') {
+                oneLyric = oneLyricString.slice(j + 1)
+                let timeList = oneLyricString.slice(1, j).split(':')
+                time = Number(timeList[0]) * 60 + Number(timeList[1])
+                break
+            }
+        }
+        if (!isNaN(time)) {
+            if (oneLyric === '') {
+                oneLyric = '...'
+            }
+            let lyricItem = [
+                time,
+                oneLyric,
+            ]
+            result.push((lyricItem))
+        }
+    }
+    return result
+}

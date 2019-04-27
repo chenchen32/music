@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PlayerApp from './App';
+import PlayerApp from './components/App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux'
 import Store from './Store'
