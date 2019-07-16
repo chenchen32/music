@@ -1,6 +1,12 @@
 import * as audioController from './actionTypes'
 import {MusicApi} from '../../api/api.js'
-import {parseLyric} from '../../utils'
+import {parseLyricArray} from '../../utils'
+
+export  const toggleSongListWindow = () => {
+    return {
+        type: audioController.TOGGLE_SONG_LIST_WINDOW,
+    }
+}
 
 export const changeAudioStatus = (status) => {
     return {
@@ -18,7 +24,7 @@ export const changePlayMode = (modeType) => {
 
 export const saveCurrentLyricIndex = (currentLyricIndex) => {
     return {
-        type: audioController.GET_CURRENT_TIME,
+        type: audioController.GET_CURRENT_INDEX,
         currentLyricIndex,
     }
 }
@@ -71,11 +77,12 @@ export const getLyricFromNet = (lrcUrl) => {
         let api = new MusicApi()
         api.getLyric(lrcUrl, (r) => {
             let l = r.response
+            console.log(lrcUrl)
             let lyricList = l.split('\n').slice(0, -1)
             if (lyricList.length === 0) {
                 lyricList = [l]
             }
-            let result = parseLyric(lyricList)
+            let result = parseLyricArray(lyricList)
             dispatch(getLyric(result))
         })
     }

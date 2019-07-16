@@ -3,19 +3,10 @@ import { Link, withRouter } from 'react-router-dom'
 import {connect} from 'react-redux'
 
 class Menu extends Component {
-    constructor(props) {
-        super(props)
-
-        this.onClick = this.onClick.bind(this)
-    }
-
-    onClick() {
-
-    }
 
     render() {
-        let searchContent = this.props.searchContent
-        let searchPath = `?s=${searchContent}`
+        let {searchContent, searchPage} = {...this.props.searchBar}
+        let searchPath = `?s=${searchContent}&page=${searchPage}`
         if (searchContent === '' || searchContent === undefined) {
             searchPath = ''
         }
@@ -28,7 +19,7 @@ class Menu extends Component {
             {
                 text: '热门歌单',
                 pathname: `/playlist`,
-                search: `?cat=${this.props.activeTag}`,
+                search: `?cat=${this.props.playList.activeTag}&page=${this.props.playList.currentPage}`,
             },
             {
                 text: '搜索',
@@ -43,7 +34,6 @@ class Menu extends Component {
                         menus.map((e, index) => {
                                 let href = `${e.pathname}${e.search}`
                                 let isCurrent = this.props.currentPathname === e.pathname
-                                // Link 组件相当于 a 标签的作用, to 相当于 href 属性
                                 return (
                                     <li className="nav-item" key={index}>
                                         <Link className={isCurrent? "nav-link nav-link-current" : "nav-link"} to={href}>{e.text}</Link>
@@ -60,8 +50,8 @@ class Menu extends Component {
 
 const mapStateTopProps = (state, ownProps) => {
     return {
-        activeTag: state.PlayListReducer.activeTag,
-        searchContent: state.SearchBarReducer.searchContent,
+        playList: state.PlayListReducer,
+        searchBar: state.SearchBarReducer,
         currentPathname: ownProps.location.pathname,
     }
 }

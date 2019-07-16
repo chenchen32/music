@@ -39,24 +39,32 @@ export const playListLoadFailure = () => ({
     type: playList.PLAYLIST_LOAD_FAILURE,
 })
 
+export const playListPageChangePage = (page) => ({
+    type: playList.PLAYLIST_PAGE_CHANGE,
+    page,
+})
+
+export const albumChangePage = (page) => ({
+    type: playList.ALBUM_PAGE_CHANGE,
+    page,
+})
+
 // 异步加载热门歌单列表
-export const fetchHotPlayList = (category="全部", page=1, company='netease') => {
-    let limit = 30
-    let offset = (Number(page)- 1) * limit
+export const fetchHotPlayList = (category="全部", page=1, pageSize=60, company='netease') => {
     return (dispatch) => {
         let queryObj = {
-                category,
-                limit,
-                offset,
-                company,
+            category,
+            pageSize,
+            page,
+            company,
         }
         dispatch(playListLoadStarted())
         let api = new MusicApi()
         api.hotPlayList(queryObj, (r) => {
             let playListResult = JSON.parse(r.response)
             console.log('加载热门歌单列表完成', playListResult)
-            if (playListResult.result === "SUCCESS") {
-                dispatch(playListLoadSuccess(playListResult))
+            if (playListResult.code === 200) {
+                dispatch(playListLoadSuccess(playListResult.data))
             } else {
                 dispatch(playListLoadFailure())
             }
@@ -77,7 +85,7 @@ export const fetchAlbumDetailInfo = (albumId, company='netease') => {
         api.albumDetailInfo(args, (r) => {
             let playListResult = JSON.parse(r.response)
             console.log('加载歌单完成', playListResult)
-            if (playListResult.result === "SUCCESS") {
+            if (playListResult.code === 200) {
                 dispatch(loadItemDetailSuccess(playListResult))
             } else {
                 dispatch(playListLoadFailure())

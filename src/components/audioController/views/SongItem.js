@@ -55,12 +55,6 @@ class SongItem extends Component {
         }
     }
 
-    // handleDelete(songIndex) {
-    //     return () => {
-    //         this.props.deleteTheSong(songIndex)
-    //     }
-    // }
-
     render() {
         let {id, name, singer, time} = this.props.songInfo
         let isTheSongPlaying = (this.props.AudioStatus === 'play') && (this.props.currentSongId === id)

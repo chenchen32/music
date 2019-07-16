@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 // import a as b from module 相当于给 a 模块起了一个别名 b,
 // 这样在其他地方使用可以直接使用 b 这个变量名
 import { BrowserRouter as Router, Route, Switch} from "react-router-dom"
-import Home from "./Home"
+import {view as Home} from "./homePage/"
 import {view as PlayListPage} from "./playListPage/"
 import {ModalPortal} from "./playListPage/"
 import {view as SearchPage} from "./searchPage/"
@@ -19,7 +19,7 @@ class App extends Component {
         return (
             // BrowserRouter 会使用 HTML5 的 history API 渲染单页路由
             <Router>
-                <div>
+                <React.Fragment>
                     <Menu />
                 {/*Router 只能有一个子元素*/}
                 {/*也可以放一个 Switch 组件*/}
@@ -37,7 +37,7 @@ class App extends Component {
                     <Footer />
                     <MusicController />
                     <ModalPortal />
-                </div>
+                </React.Fragment>
             </Router>
         )
     }

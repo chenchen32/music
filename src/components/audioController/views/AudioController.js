@@ -1,11 +1,24 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {changeAudioStatus, getLyricFromNet, saveCurrentLyricIndex, changePlayMode, playNextSong} from "../actions"
+import {
+    changeAudioStatus,
+    getLyricFromNet,
+    saveCurrentLyricIndex,
+    changePlayMode,
+    playNextSong,
+    toggleSongListWindow
+} from '../actions'
 import {timeFormat, getCurrentSongInfo} from '../../../utils'
+import * as icon from './icon'
 
 class AudioController extends Component {
     constructor(props) {
         super(props)
+        this.mapEnglishToChinese = {
+            loop: '列表循环',
+            circle: '单曲循环',
+            random: '随机播放',
+        }
         this.state = {
             currentTime: null,
             duration: null,
@@ -21,28 +34,30 @@ class AudioController extends Component {
         this.handleHover = this.handleHover.bind(this)
         this.changePlayMode = this.changePlayMode.bind(this)
         this.changeToPlayNextSong = this.changeToPlayNextSong.bind(this)
-        this.toggleList = this.toggleList.bind(this)
+        this.toggleSongList = this.toggleSongList.bind(this)
     }
 
     componentDidMount() {
         const a = this.audio.current
+        a.addEventListener('loadstart', () => {
+            this.props.getLyricFromNet(this.props.currentSongInfo.lrc)
+        })
         a.addEventListener('canplay', () => {
-            let lrcUrl = this.props.currentSongInfo.lrc
-            this.props.getLyricFromNet(lrcUrl)
             const {currentTime, duration} = a
             this.setState({
                 currentTime,
                 duration
             })
-            console.log('加载完了')
-            a.play()
+            if (!isFirstLoad) {
+                a.play()
+            } else {
+                isFirstLoad = false
+            }
         })
         a.addEventListener('play', () => {
-            console.log('在播放了')
             this.props.changeAudioStatus('play')
         })
         a.addEventListener('pause', () => {
-            console.log('暂停了一下')
             this.props.changeAudioStatus('pause')
         })
         a.addEventListener('timeupdate', () => {
@@ -51,7 +66,7 @@ class AudioController extends Component {
                 this.setState({
                     currentTime
                 })
-                this.parseCurrentTimeToGetLyricIndex(currentTime)
+                this.parseLyricIndex(currentTime)
             }
         })
         a.addEventListener('ended', () => {
@@ -60,34 +75,44 @@ class AudioController extends Component {
                 a.play()
             }
         })
+        let isFirstLoad = true
     }
 
-    parseCurrentTimeToGetLyricIndex(currentTime) {
-        let lyricArray = this.props.currentSongExtraInfo.currentLyric
-        for (let i = 0; i < lyricArray.length; i++) {
-            let time = lyricArray[i][0]
-            if (Math.abs(time - currentTime) < 0.3) {
-                this.props.saveCurrentLyricIndex(i)
-                break
-            }
+    getNextLyricIndex(currentTime, data, deltaTime) {
+        let nextLyricIndex
+        let length = data.length
+        let theLastLyricTime = data[length - 1].time
+        let isAfterTheLastLyric = currentTime >= theLastLyricTime
+        let isBetweenTheLastTwoLyric = currentTime <= theLastLyricTime && currentTime >= theLastLyricTime - deltaTime
+        if (isAfterTheLastLyric) {
+            nextLyricIndex = length - 1
+        } else if (isBetweenTheLastTwoLyric) {
+            nextLyricIndex = length - 2
+        } else {
+            nextLyricIndex = data.findIndex((lyricInfo, index, data) => {
+                if (index === length -1) {
+                    return false
+                }
+                let isStart = lyricInfo.time - deltaTime <= currentTime
+                let isNotEnd = data[index + 1].time - deltaTime >= currentTime
+                return isStart && isNotEnd
+            })
         }
-
+        return nextLyricIndex
     }
 
-    getLyricIndexWhenJumpSong(currentTime) {
-        let lyricArray = this.props.currentSongExtraInfo.currentLyric
-        let index = -1
-        for (let i = 0; i < lyricArray.length; i++) {
-            let time = lyricArray[i][0]
-            if (time > currentTime) {
-                index = i - 1
-                break
-            }
+    parseLyricIndex(currentTime, deltaTime=0.2) {
+        let data = this.props.currentSongExtraInfo.currentLyric
+        if (data.length === 0) {
+            return false
         }
-        if (index === -1) {
-            index = lyricArray.length - 1
+        let currentLyricIndex = this.getNextLyricIndex(currentTime, data, deltaTime)
+        let indexInStore = this.props.currentSongExtraInfo.currentLyricIndex
+        if (currentLyricIndex === indexInStore) {
+            return false
+        } else {
+            this.props.saveCurrentLyricIndex(currentLyricIndex)
         }
-        this.props.saveCurrentLyricIndex(index)
     }
 
     playOrPause() {
@@ -104,33 +129,6 @@ class AudioController extends Component {
         }
     }
 
-    getPlayButtonSvg() {
-        switch (this.props.AudioStatus) {
-            case 'play': {
-                return (
-                    <svg className="svg-icon" viewBox="0 0 1024 1024">
-                        <path d="M243.2 208h166.4v608H243.2zM614.4 208h166.4v608h-166.4z">
-                        </path>
-                    </svg>
-                )
-            }
-            case 'pause': {
-                return (
-                    <svg className="svg-icon" viewBox="0 0 1024 1024">
-                        <path d="M289.5 844.3V179.7l445 332.3-445 332.3z">
-                        </path>
-                    </svg>
-                )
-            }
-            default: {
-                return (
-                    <div>default</div>
-                )
-            }
-        }
-
-    }
-
     clickToSeek(event) {
         const a = this.audio.current
         let target = event.target
@@ -140,9 +138,9 @@ class AudioController extends Component {
             let currentTime = clickPosition * a.duration
             if (!isNaN(currentTime)) {
                 a.currentTime = currentTime
-                this.getLyricIndexWhenJumpSong(currentTime)
+                this.parseLyricIndex(currentTime)
             } else {
-                alert(`currentTime出现NaN了${currentTime}`)
+                return false
             }
         }
     }
@@ -184,7 +182,7 @@ class AudioController extends Component {
     AfterDragToSeek() {
         const a = this.audio.current
         a.currentTime = this.state.currentTime
-        this.getLyricIndexWhenJumpSong(this.state.currentTime)
+        this.parseLyricIndex(this.state.currentTime)
         this.setState({
             sliding: false
         })
@@ -196,16 +194,13 @@ class AudioController extends Component {
         })
     }
 
-    toggleList() {
-        let list = document.querySelector('.song-list')
-        list.classList.toggle('hidden')
+    toggleSongList() {
+        this.props.toggleSongListWindow()
         let pop = document.querySelector('.pop-up')
         if (pop === null) {
             let body = document.querySelector("body")
             body.classList.toggle('ban-scroll')
         }
-        let musicPlayer = document.querySelector('.audio-controller')
-        musicPlayer.classList.toggle('playlist-opened')
     }
 
     changePlayMode() {
@@ -214,39 +209,6 @@ class AudioController extends Component {
         let nextIndex = (index + 1) % modeList.length
         let nextModeType = modeList[nextIndex]
         this.props.changePlayMode(nextModeType)
-    }
-
-    getModeButtonSvg() {
-        switch (this.props.playMode) {
-            case 'loop': {
-                return (
-                    <svg className="svg-icon" viewBox="0 0 1024 1024">
-                        <path d="M922 607.1V887H102V157h612.2V58.2l200 125-200 125V207H152v630h720V607.1h50z">
-                        </path>
-                    </svg>
-                )
-            }
-            case 'circle': {
-                return (
-                    <svg className="svg-icon" viewBox="0 0 1024 1024">
-                        <path
-                            d="M922 607.1V887H102V157h612.2V58.2l200 125-200 125V207H152v630h720V607.1h50zM560.5 737.6V306.4h-34c-9.2 18.6-24.8 37.7-46.9 57.4-22.1 19.7-47.9 36.5-77.3 50.4v51c16.4-6.1 34.9-15.1 55.5-27.2s37.3-24.2 50-36.3v336h52.7z">
-                        </path>
-                    </svg>
-                )
-            }
-            case 'random': {
-                return (
-                    <svg className="svg-icon" viewBox="0 0 1024 1024">
-                        <path d="M726.6 774H594.4L458.8 512l135.6-262h132.2v98.7l200-125-200-125V200H564.4L430.7 457.7 297.4 200h-200v50h169.2l135.9 262-135.9 262H97.4v50h200l133.3-257.7L564.4 824h162.2v101.3l200-125-200-125z">
-                        </path>
-                    </svg>
-                )
-            }
-            default: {
-                return <div>default</div>
-            }
-        }
     }
 
     changeToPlayNextSong(loopStep) {
@@ -259,25 +221,28 @@ class AudioController extends Component {
         let {currentTime, duration} = this.state
         let {name, singer, pic, url} = this.props.currentSongInfo
         let playMode = this.props.playMode
-        let mapEnglishToChinese = {
-            loop: '列表循环',
-            circle: '单曲循环',
-            random: '随机播放',
-        }
-        let playModeTitle = mapEnglishToChinese[this.props.playMode]
+        let playModeTitle = this.mapEnglishToChinese[playMode]
         return (
-            <div className="audio-controller">
+            <div className={this.props.showSongListWindow ? "audio-controller playlist-opened" : "audio-controller"}>
                 <audio src={url} ref={this.audio}>
                 </audio>
                 <div className="album-cover">
                     <img src={pic} alt="专辑图片" />
                 </div>
                 <div className="extra-info-container">
-                    <div className={this.state.hover? "song-slider hover" : "song-slider"} onClick={this.clickToSeek} onMouseOver={this.handleHover} onMouseOut={this.handleHover} ref={this.songSlider}>
+                    <div className={this.state.hover? "song-slider hover" : "song-slider"}
+                         onClick={this.clickToSeek}
+                         onMouseOver={this.handleHover}
+                         onMouseOut={this.handleHover}
+                         ref={this.songSlider}
+                    >
                         <div className="slider-bg">
                         </div>
                         <div className="slider-progress" style={{width: `${ currentTime / duration * 100 }%`}}>
-                        <span className="slider-point" draggable="true" onDrag={this.dragToSeek()} onDragEnd={this.AfterDragToSeek}>
+                        <span className="slider-point" draggable="true"
+                              onDrag={this.dragToSeek()}
+                              onDragEnd={this.AfterDragToSeek}
+                        >
                         </span>
                         </div>
                     </div>
@@ -292,34 +257,22 @@ class AudioController extends Component {
                     </div>
                     <div className="controller-btn">
                         <span className="back-btn" title="上一首(ctrl+←)" onClick={this.changeToPlayNextSong(-1)}>
-                            <svg className="svg-icon" viewBox="0 0 1024 1024">
-                                <path d="M362.3 512l445-332.3v664.5L362.3 512zM216.7 179.7h80v664.5h-80V179.7z">
-                                </path>
-                            </svg>
+                            {icon.previousBtn}
                         </span>
                         <span className={["play-btn", this.props.AudioStatus].join(' ')} title="播放/暂停(p)" onClick={this.playOrPause}>
-                            {this.getPlayButtonSvg()}
+                            {icon.getPlayButtonSvg(this.props.AudioStatus)}
                         </span>
                         <span className="next-btn" title="下一首(ctrl+→)" onClick={this.changeToPlayNextSong(1)}>
-                            <svg className="svg-icon" viewBox="0 0 1024 1024">
-                                <path d="M216.7 844.3V179.7l445 332.3-445 332.3z m590.6 0h-80V179.7h80v664.6z">
-                                </path>
-                            </svg>
+                            {icon.nextBtn}
                         </span>
                         <span className="volume-btn icon">
-                            <svg className="svg-icon" viewBox="0 0 1024 1024">
-                                <path d="M697.5 76l-497 230.6-147.3-20v420l147.3-20 497 230.6V76z m-50 760.7l-424.9-195-13.7-6.8-15.2 2.1-90.6 12.3V343.8l90.6 12.3 15.2 2.1 13.7-6.8 424.9-194.9v680.2zM812 612h-50V412h50v200z m204.7 200h-50V212h50v600zM914.3 712h-50V312h50v400z">
-                                </path>
-                            </svg>
+                            {icon.volumeBtn}
                         </span>
                         <span className={`mode-btn icon ${playMode}`} data-mode={playMode} title={playModeTitle} onClick={this.changePlayMode}>
-                            {this.getModeButtonSvg()}
+                            {icon.getModeButtonSvg(playMode)}
                         </span>
-                        <span className="list-btn icon" title="播放列表" onClick={this.toggleList}>
-                            <svg className="svg-icon" viewBox="0 0 1024 1024">
-                                <path d="M91.9 165.2h50v50h-50v-50z m150.2 0v50h690v-50h-690zM91.9 429.7h50v-50h-50v50z m150.2 0h690v-50h-690v50zM91.9 644.3h50v-50h-50v50z m150.2 0h690v-50h-690v50zM91.9 858.8h50v-50h-50v50z m150.2 0h690v-50h-690v50z">
-                                </path>
-                            </svg>
+                        <span className="list-btn icon" title="播放列表" onClick={this.toggleSongList}>
+                            {icon.listBtn}
                         </span>
                     </div>
                 </div>
@@ -338,6 +291,7 @@ const mapStateToProps = (state) => {
         currentSongInfo: currentSongInfo,
         currentSongExtraInfo: theState.currentSongExtraInfo,
         playMode: theState.playMode,
+        showSongListWindow: theState.showSongListWindow,
     }
 }
 
@@ -358,6 +312,9 @@ const mapDispatchToProps = (dispatch) => {
         playNextSong: (modeType, loopStep) => {
             dispatch(playNextSong(modeType, loopStep))
         },
+        toggleSongListWindow: () => {
+            dispatch(toggleSongListWindow())
+        }
     }
 }
 

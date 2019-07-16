@@ -1,49 +1,30 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import * as Status from '../status'
 import {fetchSearchResult, inputChange} from '../actions'
 import SearchBar from './SearchBar'
 import SearchList from './SearchList'
+import {argsFromQuery} from '../../../utils'
 import './SearchPage.css'
 
 class SearchPage extends Component {
-    argsFromQuery(query) {
-        let o = {}
-        if (query.length === 0) {
-            return o
-        }
-        query.split('&').forEach(e => {
-            let [k, v] = e.split('=')
-            o[k] = v
-        })
-        return o
-    }
-
-    getSearchContent(location) {
-        let searchPath = location.search
-        let searchQuery = searchPath.slice(1)
-        let searchContent = this.argsFromQuery(searchQuery)
-        if (searchContent !== undefined) {
-            let {s, page} = {...searchContent}
-            return {s, page}
-        }
-    }
 
     componentDidMount() {
-        let o = this.getSearchContent(this.props.location)
-        let {s, page} = {...o}
+        let query = argsFromQuery(this.props.location.search)
+        let s = query.s
+        let page = Number(query.page)
         if (s !== undefined && s !== this.props.searchContent) {
-            this.props.searchAction(s, page)
+            this.props.fetchSearchResult(s, page)
             this.props.inputChange(s)
         }
     }
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        if (nextProps.location.search !== this.props.location.search) {
-            let location = nextProps.location
-            let o = this.getSearchContent(location)
-            let {s} = {...o}
-            this.props.searchAction(s)
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.location.search !== this.props.location.search) {
+            let query = argsFromQuery(this.props.location.search)
+            let s = query.s
+            let page = Number(query.page)
+            this.props.fetchSearchResult(s, page)
         }
     }
 
@@ -98,7 +79,7 @@ const mapStateTopProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        searchAction: (input, page) => {
+        fetchSearchResult: (input, page) => {
             dispatch(fetchSearchResult(input, page))
         },
         inputChange: (input) => {

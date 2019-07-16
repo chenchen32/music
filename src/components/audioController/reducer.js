@@ -1,132 +1,101 @@
 import * as audioController from './actionTypes'
-import {saveSongToLocalStorage, deleteSongInLocalStorage} from "../../utils"
+import {saveSongToLocalStorage, deleteSongInLocalStorage, saveCurrentSongIndexInLocalStorage} from "../../utils"
 
 export default (state, action) => {
     switch (action.type) {
+        case audioController.TOGGLE_SONG_LIST_WINDOW: {
+            return {
+                ...state,
+                showSongListWindow: !state.showSongListWindow,
+            }
+        }
         case audioController.CHANGE_AUDIO_STATUS: {
-            return {...state,
+            return {
+                ...state,
                 AudioStatus: action.status
             }
         }
         case audioController.APPEND_THE_SONG: {
             let songList = state['songList']
-            let isTheSongNotExisted = songList.every((value) => {
-                return (value.id !== action.songInfo.id)
-            })
+            let cloneList = JSON.parse(JSON.stringify(songList))
+            let isTheSongNotExisted = songList.every((value) => value.id !== action.songInfo.id)
             if (isTheSongNotExisted) {
-                let cloneList = JSON.parse(JSON.stringify(songList))
                 cloneList.push(action.songInfo)
                 saveSongToLocalStorage(action.songInfo)
-                return {
-                    ...state,
-                    songList: cloneList,
-                }
-            } else {
-                return {
-                    ...state
-                }
+            }
+            return {
+                ...state,
+                songList: cloneList,
             }
         }
         case audioController.DELETE_THE_SONG: {
             let songList = state['songList']
             let cloneList = JSON.parse(JSON.stringify(songList))
-            let songIndex = action.songIndex
+            let deleteSongIndex = action.songIndex
             let currentSongIndex = state.currentSongExtraInfo.currentSongIndex
             let listLength = cloneList.length
-            deleteSongInLocalStorage(songIndex)
-            cloneList.splice(songIndex, 1)
-            if (listLength === 1) {
-                return {
-                    ...state,
-                    songList: [],
-                    currentSongExtraInfo: {
-                        ...state.currentSongExtraInfo,
-                        currentSongIndex: -1,
-                    }
+            deleteSongInLocalStorage(deleteSongIndex)
+            cloneList.splice(deleteSongIndex, 1)
+            let justOneSong = listLength === 1
+            let isCurrentSong = currentSongIndex === deleteSongIndex
+            let isTheLastSong = currentSongIndex === listLength - 1
+            let beforeCurrentSong = currentSongIndex < deleteSongIndex
+            let updateCurrentSongIndex = -1
+            if (justOneSong) {
+                updateCurrentSongIndex = -1
+            } else if (isCurrentSong) {
+                if (isTheLastSong) {
+                    updateCurrentSongIndex = currentSongIndex - 1
+                } else {
+                    updateCurrentSongIndex = currentSongIndex
+                }
+            } else {
+                if (beforeCurrentSong) {
+                    updateCurrentSongIndex = currentSongIndex
+                } else {
+                    updateCurrentSongIndex = currentSongIndex -1
                 }
             }
-            if (currentSongIndex !== songIndex) {
-                if (currentSongIndex < songIndex) {
-                    return {
-                        ...state,
-                        songList: cloneList,
-                    }
-                } else {
-                    let newSongIndex = currentSongIndex - 1
-                    console.log('删除了前面的歌')
-                    return {
-                        ...state,
-                        songList: cloneList,
-                        currentSongExtraInfo: {
-                            ...state.currentSongExtraInfo,
-                            currentSongIndex: newSongIndex,
-                        }
-                    }
-                }
-
-            } else {
-                if (currentSongIndex !== listLength - 1) {
-                    let newSongIndex = currentSongIndex
-                    return {
-                        ...state,
-                        songList: cloneList,
-                        currentSongExtraInfo: {
-                            ...state.currentSongExtraInfo,
-                            currentSongIndex: newSongIndex,
-                        }
-                    }
-                } else {
-                    let newSongIndex = currentSongIndex - 1
-                    return {
-                        ...state,
-                        songList: cloneList,
-                        currentSongExtraInfo: {
-                            ...state.currentSongExtraInfo,
-                            currentSongIndex: newSongIndex,
-                        }
-                    }
+            saveCurrentSongIndexInLocalStorage(updateCurrentSongIndex)
+            return {
+                ...state,
+                songList: cloneList,
+                currentSongExtraInfo: {
+                    ...state.currentSongExtraInfo,
+                    currentSongIndex: updateCurrentSongIndex,
                 }
             }
         }
         case audioController.PLAY_THE_SONG_IN_PAGE: {
             let songList = state['songList']
-            let currentSongIndex = -1
-            let isTheSongNotExisted = songList.every((value, index) => {
-                currentSongIndex = index
-                return (value.id !== action.songInfo.id)
-            })
-            console.log('currentSongIndex', currentSongIndex)
+            let cloneList = JSON.parse(JSON.stringify(songList))
+            let updateCurrentSongIndex = songList.findIndex((song) => song.id === action.songInfo.id)
+            let isTheSongNotExisted = updateCurrentSongIndex === -1
             if (isTheSongNotExisted) {
-                let cloneList = JSON.parse(JSON.stringify(songList))
                 cloneList.push(action.songInfo)
                 saveSongToLocalStorage(action.songInfo)
-                return {
-                    ...state,
-                    songList: cloneList,
-                    currentSongExtraInfo: {
-                        ...state.currentSongExtraInfo,
-                        currentSongIndex: cloneList.length - 1,
-                        currentLyricIndex: -1,
-                    },
-                }
-            } else {
-                return {
-                    ...state,
-                    currentSongExtraInfo: {
-                        ...state.currentSongExtraInfo,
-                        currentSongIndex,
-                        currentLyricIndex: -1,
-                    },
-                }
+                updateCurrentSongIndex = cloneList.length - 1
+            }
+            saveCurrentSongIndexInLocalStorage(updateCurrentSongIndex)
+            return {
+                ...state,
+                songList: cloneList,
+                currentSongExtraInfo: {
+                    ...state.currentSongExtraInfo,
+                    currentSongIndex: updateCurrentSongIndex,
+                    currentLyricIndex: -1,
+                },
             }
         }
         case audioController.PLAY_THE_SONG_IN_LIST: {
+            saveCurrentSongIndexInLocalStorage(action.songIndex)
             return {
                 ...state,
                 currentSongExtraInfo: {
                     ...state.currentSongExtraInfo,
                     currentSongIndex: action.songIndex,
                     currentLyricIndex: -1,
+                    currentLyric: [],
                 }
             }
         }
@@ -141,11 +110,17 @@ export default (state, action) => {
             }
             let step = mapModeTypeToNextStep[modeType]
             let nextSongIndex = (currentSongIndex + step + LengthOfSongList) % LengthOfSongList
+            let currentLyric = []
+            if (nextSongIndex === currentSongIndex) {
+                currentLyric = state.currentSongExtraInfo.currentLyric
+            }
+            saveCurrentSongIndexInLocalStorage(nextSongIndex)
             return {
                 ...state,
                 currentSongExtraInfo: {
                     ...state.currentSongExtraInfo,
                     currentSongIndex: nextSongIndex,
+                    currentLyric,
                     currentLyricIndex: -1,
                 },
             }
@@ -159,9 +134,10 @@ export default (state, action) => {
                 },
             }
         }
-        case audioController.GET_CURRENT_TIME: {
+        case audioController.GET_CURRENT_INDEX: {
             let index = action.currentLyricIndex
             if (index === undefined) {
+                console.log('index undefined')
                 return {
                     ...state,
                 }

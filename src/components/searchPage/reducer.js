@@ -10,20 +10,29 @@ export default (state, action) => {
             }
         }
         case search.SEARCH_STARTED: {
-            return {...state,
+            return {
+                ...state,
                 status: Status.LOADING
             }
         }
         case search.SEARCH_SUCCESS: {
-            return {...state,
+            return {
+                ...state,
                 status: Status.SUCCESS,
                 searchResult: action.result,
-                searchContent: action.searchContent
+                searchContent: action.searchContent,
+                searchPage: action.searchPage,
             }
         }
         case search.SEARCH_FAILURE: {
             return {
                 status: Status.FAILURE
+            }
+        }
+        case search.CHANGE_PAGE: {
+            return {
+                ...state,
+                searchPage: action.page,
             }
         }
         default: {

@@ -36,16 +36,9 @@ class TagItem extends Component {
             <div className="playlist-tag-tabs">
                 {this.props.theTagTabs.map((value, index) => {
                     return (
-                            <Link key={index} className={this.getClassName(value)} to={`/playlist?cat=${value}`} onClick={this.tagChange.bind(this, value)}>{value}</Link>
+                            <Link key={index} className={this.getClassName(value)} to={`/playlist?cat=${value}&page=1`} onClick={this.tagChange.bind(this, value)}>{value}</Link>
                     )
                 })}
-                {/*{this.props.theTagTabs.map((value, index) => {*/}
-                    {/*if (index % 6 === 0) {*/}
-                        {/*return this.getTagTable(index)*/}
-                    {/*} else {*/}
-                        {/*return false*/}
-                    {/*}*/}
-                {/*})}*/}
             </div>
         )
     }

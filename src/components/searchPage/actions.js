@@ -14,10 +14,11 @@ export const searchStarted = (data) => ({
 })
 
 // 搜索成功
-export const searchSuccess = (result, searchContent) => ({
+export const searchSuccess = (result, searchContent, searchPage) => ({
     type: search.SEARCH_SUCCESS,
     result,
     searchContent,
+    searchPage,
 })
 
 // 搜索失败
@@ -26,15 +27,18 @@ export const searchFailure = (error) => ({
     error,
 })
 
+export const changePage = (page) => ({
+    type: search.CHANGE_PAGE,
+    page
+})
+
 // 拿到搜索数据
-export const fetchSearchResult = (input, page=1, company='netease') => {
-    let limit = 20
-    let offset = (Number(page)- 1) * limit
+export const fetchSearchResult = (input, page=1, pageSize=20, company='netease') => {
     return (dispatch) => {
         let queryObj = {
             input,
-            limit,
-            offset,
+            pageSize,
+            page,
             company,
         }
         dispatch(searchStarted(input))
@@ -42,8 +46,8 @@ export const fetchSearchResult = (input, page=1, company='netease') => {
         api.searchResult(queryObj, (r) => {
             let searchResult = JSON.parse(r.response)
             console.log('搜索完成', searchResult)
-            if (searchResult.result === "SUCCESS") {
-                dispatch(searchSuccess(searchResult, queryObj.input))
+            if (searchResult.code === 200) {
+                dispatch(searchSuccess(searchResult, queryObj.input, page))
             } else {
                 dispatch(searchFailure(searchResult))
             }

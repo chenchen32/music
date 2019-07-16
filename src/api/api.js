@@ -6,7 +6,11 @@ const ajax = function(args, callback) {
     r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
     r.onreadystatechange = () => {
         if (r.readyState === 4) {
-            callback(r)
+            if ((r.status >= 200 && r.status < 300) || r.status === 304) {
+                callback(r)
+            } else {
+                console.log('error')
+            }
         }
     }
     r.send(data)
@@ -14,16 +18,15 @@ const ajax = function(args, callback) {
 
 class Api {
     constructor() {
-        this.baseUrl = 'https://api.itooi.cn/music/'
+        // this.baseUrl = 'https://api.itooi.cn/music/'
+        this.baseUrl = 'https://v1.itooi.cn/'
     }
 
     get(path, callback, isPathEqualToUrl) {
         let method = 'GET'
-        let url
+        let url = this.baseUrl + path
         if (isPathEqualToUrl) {
             url = path
-        } else {
-            url = this.baseUrl + path
         }
         let args = {
             method,
@@ -36,25 +39,32 @@ class Api {
 
 export class MusicApi extends Api {
     searchResult(queryObj, callback) {
-        let {input, limit, offset, company} = {...queryObj}
-        let path = `${company}/search?key=579621905&s=${input}&type=song&limit=${limit}&offset=${offset}`
-        // 如果需要源数据，加上 &isOrigin=1
+        let {input, pageSize, page, company} = {...queryObj}
+        // let path = `${company}/search?key=579621905&s=${input}&type=song&limit=${limit}&offset=${offset}`
+        let path = `${company}/search?keyword=${input}&type=song&pageSize=${pageSize}&page=${(page - 1) * pageSize}`
+        // 如果需要源数据，加上 &format=1
         this.get(path, callback)
     }
 
     hotPlayList(queryObj, callback) {
-        let {category, limit, offset, company} = {...queryObj}
-        let path = `${company}/hotSongList?key=579621905&cat=${category}&limit=${limit}&offset=${offset}`
+        let {category, pageSize, page, company} = {...queryObj}
+        // let path = `${company}/hotSongList?key=579621905&cat=${category}&limit=${limit}&offset=${offset}`
+        let path = `${company}/songList/hot?categoryType=${category}&pageSize=${pageSize}&page=${(page - 1) * pageSize}`
         this.get(path, callback)
     }
 
     albumDetailInfo(queryObj, callback) {
         let {albumId, company} = {...queryObj}
-        let path = `${company}/songList?key=579621905&id=${albumId}`
+        let path = `${company}/songList?id=${albumId}`
         this.get(path, callback)
     }
 
     getLyric(lrcUrl, callback) {
         this.get(lrcUrl, callback, true)
+    }
+
+    getImgInHomePage(callback) {
+        let url = 'https://v1.itooi.cn/netease/banner'
+        this.get(url, callback, true)
     }
 }

@@ -73,7 +73,7 @@ class TagSelector extends Component {
                     </svg>
                 </span>
                 <div className={this.state.show ? "playlist-tags-container" : "playlist-tags-container hidden"} onClick={this.clickOnBlankArea}>
-                    <Link className={this.props.activeTag === '全部' ? "playlist-main-tag active-tag" : "playlist-main-tag"} to={`/playlist?cat=全部`} onClick={this.tagChange.bind(this, '全部')}>全部</Link>
+                    <Link className={this.props.activeTag === '全部' ? "playlist-main-tag active-tag" : "playlist-main-tag"} to={{pathname: 'playlist', search: '?cat=全部&page=1'}} onClick={this.tagChange.bind(this, '全部')}>全部</Link>
                     {this.mainTags.map((value, index) => {
                         let theTagTabs = this.mapTagToMain[value]
                         return(

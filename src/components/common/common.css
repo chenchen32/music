@@ -1,0 +1,37 @@
+.page-selector {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.page-btn {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+    outline: none;
+}
+
+.page-btn:hover {
+    border-color: rgb(55, 156, 250);
+    color: rgb(55, 156, 250);
+}
+
+.previous-ban-click, .next-ban-click {
+    border-color: #ccc;
+    color: #ccc;
+}
+
+.previous-ban-click:hover, .next-ban-click:hover {
+    border-color: #ccc;
+    color: #ccc;
+}
+
+.page-selector-current {
+    border-color: rgb(55, 156, 250);
+    color: rgb(255, 255, 255)!important;
+    background-color: rgb(55, 156, 250);
+}

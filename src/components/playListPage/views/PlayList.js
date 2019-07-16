@@ -1,55 +1,49 @@
 import React, { Component } from 'react'
-import * as Status from "../status"
+import * as Status from '../status'
 import {connect} from 'react-redux'
-import {fetchHotPlayList, playListTagChange} from "../actions"
+import {fetchHotPlayList, playListTagChange, playListPageChangePage} from '../actions'
 import {withRouter} from 'react-router-dom'
 import PlayListItem from './PlayListItem'
+import {argsFromQuery} from '../../../utils'
+import PageSelector from '../../common/PageSelector'
 
 class PlayList extends Component {
     constructor(props) {
         super(props)
 
-        this.onLoad = this.onLoad.bind(this)
-    }
-
-    argsFromQuery(query) {
-        let o = {}
-        if (query.length === 0) {
-            return o
-        }
-        query.split('&').forEach(e => {
-            let [k, v] = e.split('=')
-            o[k] = v
-        })
-        return o
-    }
-
-    getPlayListActiveTag(location) {
-        let path = location.search
-        let query = path.slice(1)
-        let o = this.argsFromQuery(query)
-        let activeTag = o['cat']
-        return activeTag
+        this.pushHistory = this.pushHistory.bind(this)
+        this.getSelectorInfo = this.getSelectorInfo.bind(this)
     }
 
     componentDidMount() {
         if (this.props.status !== 'success') {
-            this.onLoad()
-            let activeTag = this.getPlayListActiveTag(this.props.location)
+            let params = argsFromQuery(this.props.location.search)
+            let activeTag = params.cat
+            let page = params.page
+            this.props.fetchHotPlayList(activeTag, page)
             this.props.playListTagChange(decodeURI(activeTag))
+            this.props.changePage(page)
         }
     }
 
-    componentWillUpdate(nextProps, nextState, nextContext) {
-        if (this.props.location !== nextProps.location) {
-            let activeTag = this.getPlayListActiveTag(nextProps.location)
-            this.props.fetchHotPlayList(activeTag, 1)
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.location !== prevProps.location) {
+            let params = argsFromQuery(this.props.location.search)
+            let activeTag = params.cat
+            let page = params.page
+            this.props.fetchHotPlayList(activeTag, page)
         }
     }
 
-    onLoad() {
-        let activeTag = this.getPlayListActiveTag(this.props.location)
-        this.props.fetchHotPlayList(activeTag, 1)
+    pushHistory(newPage) {
+        this.props.history.push(`playlist?cat=${this.props.activeTag}&page=${newPage}`)
+    }
+
+    getSelectorInfo() {
+        return {
+            totalPage: this.props.totalPage,
+            currentPage: Number(this.props.currentPage),
+        }
     }
 
     showHotPlayList() {
@@ -64,12 +58,13 @@ class PlayList extends Component {
                 )
             }
             case Status.SUCCESS: {
-                let playListResult = this.props.playListResult.data
+                let playListResult = this.props.playListResult
                 return (
                     <div className="playlist-result">
                         {playListResult.map((value, index) => {
                             return <PlayListItem key={index} itemInfo={value} />
                         })}
+                        <PageSelector selectorInfo={this.getSelectorInfo()} changePage={this.props.changePage} pushHistory={this.pushHistory}/>
                     </div>
                 )
             }
@@ -99,6 +94,9 @@ const mapStateTopProps = (state) => {
         status: theState.playListStatus,
         playListResult: theState.playListResult,
         activeTag: theState.activeTag,
+        currentPage: theState.currentPage,
+        pageSize: theState.pageSize,
+        totalPage: theState.totalPage,
     }
 }
 
@@ -110,6 +108,9 @@ const mapDispatchToProps = (dispatch) => {
         playListTagChange: (tagName) => {
             dispatch(playListTagChange(tagName))
         },
+        changePage: (page) => {
+            dispatch(playListPageChangePage(page))
+        }
     }
 }
 

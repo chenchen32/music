@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {SearchItem} from "../../searchPage/"
+import {SearchItem} from '../../searchPage'
 import {deleteItemDetail} from '../actions'
-import * as Status from "../status"
+import * as Status from '../status'
+import PageSelector from '../../common/PageSelector'
+import {albumChangePage} from '../actions'
 
 class ModalPortal extends Component {
     constructor(props) {
@@ -17,13 +19,10 @@ class ModalPortal extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         let body = document.querySelector("body")
-        // let musicPlayer = document.querySelector('.music-controller')
         if (this.props.albumStatus !== Status.INIT) {
             body.classList.add('ban-scroll')
-            // musicPlayer.classList.add('ban-scrollbar')
         } else {
             body.classList.remove('ban-scroll')
-            // musicPlayer.classList.remove('ban-scrollbar')
         }
     }
 
@@ -38,6 +37,28 @@ class ModalPortal extends Component {
         this.setState({
             isAllDescriptionShowed: false,
         })
+    }
+
+    dataCleaning(fetchedData) {
+        let singerList = fetchedData.artists.map(artist => artist.name)
+        let singer = singerList.join('/')
+        return {
+            id: fetchedData.id,
+            name: fetchedData.name,
+            singer,
+            time: fetchedData.duration / 1000,
+            pic: fetchedData.album.blurPicUrl,
+            lrc: `https://v1.itooi.cn/netease/lrc?id=${fetchedData.id}`,
+            url: `https://v1.itooi.cn/netease/url?id=${fetchedData.id}`,
+        }
+    }
+
+    getSelectorInfo() {
+        let totalPage = Math.ceil(this.props.albumDetailInfo.data.trackCount / this.props.albumPageSize)
+        return {
+            totalPage,
+            currentPage: Number(this.props.albumCurrentPage),
+        }
     }
 
     showAlbumList() {
@@ -62,36 +83,38 @@ class ModalPortal extends Component {
             case Status.SUCCESS: {
                 let data = this.props.albumDetailInfo.data
                 console.log('data', data)
+                let {albumCurrentPage, albumPageSize} = {...this.props}
+                let start = (albumCurrentPage - 1) * albumPageSize
+                let end = start + albumPageSize
                 return (
                     <div className="pop-up">
                         <div className="pop-window">
                             <span className="modal-portal-toggle" onClick={this.deleteDetailInfo}>×</span>
                             <div className="album-list-container">
                                 <div className={this.state.isAllDescriptionShowed ? "album-list-info all-description-showed" : "album-list-info"}>
-                                    <img className="album-list-bg" src={data.songListPic} alt="专辑图片"/>
+                                    <img className="album-list-bg" src={data.coverImgUrl} alt="专辑图片"/>
                                     <span className="album-list-pic">
-                                        <img src={data.songListPic} alt="专辑图片"/>
+                                        <img src={data.coverImgUrl} alt="专辑图片"/>
                                     </span>
-                                    <div className="album-list-name" title={data.songListName}>
-                                            {`歌单：${data.songListName}`}
+                                    <div className="album-list-name" title={data.name}>
+                                            {`歌单：${data.name}`}
                                     </div>
                                     <p className={this.state.isAllDescriptionShowed ? "album-list-description all-description-showed" : "album-list-description"}>
                                         <span>介绍：</span><br/>
-                                        {`${data.songListDescription}`}
+                                        {`${data.description}`}
                                     </p>
-                                    {/*<p className={this.state.isAllDescriptionShowed ? "after-description hidden" : "after-description"}>*/}
-                                        {/*...*/}
-                                    {/*</p>*/}
                                     <span className="description-toggle" onClick={this.descriptionToggle}>{this.state.isAllDescriptionShowed ? '收起' : '展开'}</span>
                                 </div>
                                 <div className="album-list-count">
-                                    {`歌曲列表 (${data.songListCount}首歌)`}
+                                    {`歌曲列表 (${data.trackCount}首歌)`}
                                 </div>
                                 <div className="album-list-items">
-                                    {data.songs.map((value, index) => {
-                                        return <SearchItem key={index} index={index} result={value}/>
+                                    {data.tracks.slice(start, end).map((value, i) => {
+                                        let index = i + start
+                                        return <SearchItem key={index} index={index} result={this.dataCleaning(value)}/>
                                     })}
                                 </div>
+                                <PageSelector selectorInfo={this.getSelectorInfo()} changePage={this.props.changePage} />
                             </div>
                         </div>
                     </div>
@@ -116,7 +139,9 @@ const mapStateToProps = (state) => {
     let theState = state.PlayListReducer
     return {
         albumDetailInfo: theState.albumDetailInfo,
-        albumStatus: theState.albumStatus
+        albumStatus: theState.albumStatus,
+        albumCurrentPage: theState.albumCurrentPage,
+        albumPageSize: theState.albumPageSize,
     }
 }
 
@@ -124,6 +149,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         deleteItemDetail: () => {
             dispatch(deleteItemDetail())
+        },
+        changePage: (page) => {
+            dispatch(albumChangePage(page))
         }
     }
 }

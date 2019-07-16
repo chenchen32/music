@@ -13,24 +13,21 @@ body::-webkit-scrollbar-thumb {
 }
 
 .playlist-opened {
-    left: calc(50% - 9px) !important;
-    width: calc(40% - 9px) !important;
-    transform: translateX(-50%);
     background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .audio-controller {
     position: fixed;
-    width: calc(27vw);
+    left: 50vw;
+    width: 38vw;
+    transform: translateX(-50%);
     min-width: 375px;
     height: 80px;
     bottom: 0;
-    left: 0;
-    margin: 0 auto;
     z-index: 3;
     background-color: rgb(255, 255, 255);
     box-shadow: 10px -10px 30px -8px rgba(0, 0, 0, 0.6);
-    transition: 0.5s ease;
+    transition: 0.3s ease;
 }
 
 .album-cover {
@@ -238,7 +235,7 @@ body::-webkit-scrollbar-thumb {
     left: 20px;
     top: 20px;
     width: 200px;
-    font-size: 20px;
+    font-size: 18px;
     color: rgba(200, 200, 200, 0.5);
 }
 
@@ -311,15 +308,14 @@ body::-webkit-scrollbar-thumb {
 .lyric-item {
     font-size: 15px;
     text-align: center;
-    vertical-align:middle;
     width: 80%;
-    height: 46px;
+    min-height: 46px;
     margin: 0 auto;
     color: rgba(200, 200, 200, 0.8);
 }
 
 .active {
-    color: rgba(220, 60, 60, 0.8);
+    color: rgba(255, 60, 60, 0.8);
 }
 
 .song-list-head-container {

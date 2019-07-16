@@ -18,7 +18,7 @@ class SearchItem extends Component {
     handlePlay() {
         if (this.props.currentSongId !== this.props.result.id) {
             this.props.playTheSongInPage(this.props.result)
-            console.log('this.props.songInfo，第一次放', this.props.songInfo)
+            console.log('this.props.songInfo，第一次放', this.props.result)
         } else {
             let audio = document.querySelector('audio')
             audio.play()

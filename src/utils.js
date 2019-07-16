@@ -13,6 +13,30 @@ export const timeFormat = function(seconds) {
     return `${m}:${s}`
 }
 
+export const timeDeFormat = (timeInfo) => {
+    let timeList = timeInfo.split(':')
+    let length = timeList.length
+    let time = 0
+    timeList.map((value, index) => {
+        let exp = length - index - 1
+        time += value * 60 ** exp
+        return 0
+    })
+    return time
+}
+
+export const loadCurrentSongIndexInLocalStorage = () => {
+    let currentSongIndex = JSON.parse(localStorage.getItem('currentSongIndex'))
+    if (currentSongIndex === null) {
+        currentSongIndex = -1
+    }
+    return currentSongIndex
+}
+
+export const saveCurrentSongIndexInLocalStorage = (index) => {
+    localStorage.setItem('currentSongIndex', JSON.stringify(index))
+}
+
 export const loadSongListInLocalStorage = () => {
     let songList = JSON.parse(localStorage.getItem('songList'))
     if (songList === null) {
@@ -48,31 +72,75 @@ export const getCurrentSongInfo = (theState) => {
     return currentSongInfo
 }
 
-export const parseLyric = (lyricsArray) => {
+const clearTimeRepeat = (lyricList, repeatIndex, lyricBeforeTranslated) => {
+    let result = lyricList
+    let element = result[repeatIndex].lyric
+    if (element === '...') {
+        result[repeatIndex].lyric = lyricBeforeTranslated
+    } else {
+        result[repeatIndex].translatedLyric = element
+        result[repeatIndex].lyric = lyricBeforeTranslated
+    }
+}
+
+const parseLyric = (lyric) => {
+    let oneLyricInfo = lyric
+    let indexOfTime = oneLyricInfo.indexOf(']')
+    let oneLyric = oneLyricInfo.slice(indexOfTime + 1)
+    let timeInfo = oneLyricInfo.slice(1, indexOfTime)
+    let time = timeDeFormat(timeInfo)
+    return {
+        oneLyric,
+        time
+    }
+}
+
+export const parseLyricArray = (lyricsArray) => {
     let result = []
     for (let i = 0; i < lyricsArray.length; i++) {
-        let oneLyricString = lyricsArray[i]
-        let oneLyric = ''
-        let time = -1
-        for (let j = 0; j < oneLyricString.length; j++) {
-            let e = oneLyricString[j]
-            if (e === ']') {
-                oneLyric = oneLyricString.slice(j + 1)
-                let timeList = oneLyricString.slice(1, j).split(':')
-                time = Number(timeList[0]) * 60 + Number(timeList[1])
-                break
+        let oneLyricInfo = lyricsArray[i]
+        let {oneLyric, time} = parseLyric(oneLyricInfo)
+        let repeatIndex = result.findIndex((theLyric) => {
+            return theLyric.time === time
+        })
+        let isTimeRepeat = repeatIndex !== -1
+        if (isTimeRepeat) {
+            clearTimeRepeat(result, repeatIndex, oneLyric)
+        } else {
+            if (isNaN(time)) {
+                continue
             }
-        }
-        if (!isNaN(time)) {
             if (oneLyric === '') {
                 oneLyric = '...'
             }
-            let lyricItem = [
+            let lyricItem = {
                 time,
-                oneLyric,
-            ]
+                lyric: oneLyric,
+                translatedLyric: null,
+            }
             result.push((lyricItem))
         }
     }
+    result.sort((prev, current) => prev.time - current.time)
     return result
+}
+
+export const argsFromQuery = (query) => {
+    if (query[0] === '?') {
+        query = query.slice(1)
+    }
+    let o = {}
+    if (query.length === 0) {
+        return o
+    }
+    query.split('&').forEach(e => {
+        let [k, v] = e.split('=')
+        o[k] = v
+    })
+    return o
+}
+
+export const changeImgResolution = (url, pixel) => {
+    let list = url.split('?')
+    return `${list[0]}?param=${pixel}y${pixel}`
 }

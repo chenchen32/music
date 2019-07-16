@@ -131,6 +131,7 @@
 
 .playlist-result {
     text-align: center;
+    margin: 0 0 40px 0;
 }
 
 .ban-scroll {
@@ -140,9 +141,6 @@
 
 .pop-up {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
     bottom: 0;
     width: 100%;
     height: 100%;
@@ -156,7 +154,6 @@
     transform: translateY(-50%);
     left: 0;
     right: 0;
-    bottom: 0;
     margin: 0 auto;
     width: 55%;
     min-width: 800px;
