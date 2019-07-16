@@ -70,9 +70,12 @@ class AudioController extends Component {
             }
         })
         a.addEventListener('ended', () => {
-            this.props.playNextSong(this.props.playMode)
-            if (this.props.lengthOfSongList === 1 || this.props.playMode === 'circle') {
-                a.play()
+            let {lengthOfSongList, playMode} = this.props
+            if (lengthOfSongList !== 0) {
+                this.props.playNextSong(playMode)
+                if (lengthOfSongList === 1 || playMode === 'circle') {
+                    a.play()
+                }
             }
         })
         let isFirstLoad = true
@@ -119,10 +122,10 @@ class AudioController extends Component {
     }
 
     playOrPause() {
-        if (this.props.currentSongInfo.id === -1) {
-            return 0
-        }
         const a = this.audio.current
+        if (a.currentSrc === '') {
+            return
+        }
         if (this.props.AudioStatus === 'pause') {
             a.play()
             this.props.changeAudioStatus('play')
