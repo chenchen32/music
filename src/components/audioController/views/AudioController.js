@@ -76,6 +76,9 @@ class AudioController extends Component {
             }
         })
         let isFirstLoad = true
+        if (this.props.lengthOfSongList === 0) {
+            isFirstLoad = false
+        }
     }
 
     getNextLyricIndex(currentTime, data, deltaTime) {
