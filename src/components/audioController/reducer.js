@@ -41,6 +41,7 @@ export default (state, action) => {
             let isTheLastSong = currentSongIndex === listLength - 1
             let beforeCurrentSong = currentSongIndex < deleteSongIndex
             let updateCurrentSongIndex = -1
+            let updateCurrentLyric = state.currentSongExtraInfo.currentLyric
             if (justOneSong) {
                 updateCurrentSongIndex = -1
             } else if (isCurrentSong) {
@@ -49,6 +50,7 @@ export default (state, action) => {
                 } else {
                     updateCurrentSongIndex = currentSongIndex
                 }
+                updateCurrentLyric = []
             } else {
                 if (beforeCurrentSong) {
                     updateCurrentSongIndex = currentSongIndex
@@ -62,6 +64,7 @@ export default (state, action) => {
                 songList: cloneList,
                 currentSongExtraInfo: {
                     ...state.currentSongExtraInfo,
+                    currentLyric: updateCurrentLyric,
                     currentSongIndex: updateCurrentSongIndex,
                 }
             }
