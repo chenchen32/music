@@ -15,7 +15,7 @@ class SongList extends Component {
 
     render() {
         let defaultPic = "http://s4.music.126.net/style/web2/img/default/default_album.jpg"
-        let picUrl = this.props.currentSongInfo || defaultPic
+        let picUrl = this.props.currentSongInfo.pic || defaultPic
         let {currentLyric, currentLyricIndex} = this.props.currentSongExtraInfo
         let length = this.props.songList.length
         return (
