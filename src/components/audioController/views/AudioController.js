@@ -19,6 +19,7 @@ class AudioController extends Component {
             circle: '单曲循环',
             random: '随机播放',
         }
+        this.isFirstLoad = true
         this.state = {
             currentTime: null,
             duration: null,
@@ -48,10 +49,11 @@ class AudioController extends Component {
                 currentTime,
                 duration
             })
-            if (!isFirstLoad) {
+            let shouldAutoPlay = !this.isFirstLoad
+            if (shouldAutoPlay) {
                 a.play()
             } else {
-                isFirstLoad = false
+                this.isFirstLoad = false
             }
         })
         a.addEventListener('play', () => {
@@ -78,9 +80,8 @@ class AudioController extends Component {
                 }
             }
         })
-        let isFirstLoad = true
-        if (this.props.lengthOfSongList === 0) {
-            isFirstLoad = false
+        if (this.isFirstLoad && this.props.lengthOfSongList === 0) {
+            this.isFirstLoad = false
         }
     }
 
