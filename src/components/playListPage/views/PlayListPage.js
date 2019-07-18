@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PlayList from './PlayList'
-import TagSelector from "./TagSelector"
+import TagSelector from './TagSelector'
+import ModalPortal from './ModalPortal'
 import './playListPage.css'
 
 class PlayListPage extends Component {
@@ -10,6 +11,7 @@ class PlayListPage extends Component {
             <div className="playlist-content">
                 <TagSelector />
                 <PlayList />
+                <ModalPortal />
             </div>
         )
     }

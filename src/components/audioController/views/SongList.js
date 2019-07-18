@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import SongItem from './SongItem'
-import {getCurrentSongInfo} from '../../../utils'
+import {getCurrentSongInfo, changeImgResolution} from '../../../utils'
 
 class SongList extends Component {
     static scrollLyricList(div, currentLyricIndex) {
@@ -9,13 +9,13 @@ class SongList extends Component {
             let {height} = div.getBoundingClientRect()
             let i = Math.floor(height / 46 / 2)
             div.scrollTop = currentLyricIndex * 46 - 46 * i
-            console.log('滚动歌词')
         }
     }
 
     render() {
         let defaultPic = "http://s4.music.126.net/style/web2/img/default/default_album.jpg"
         let picUrl = this.props.currentSongInfo.pic || defaultPic
+        picUrl = changeImgResolution(picUrl, 800)
         let {currentLyric, currentLyricIndex} = this.props.currentSongExtraInfo
         let length = this.props.songList.length
         return (

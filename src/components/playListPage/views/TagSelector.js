@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import {playListTagChange} from '../actions'
 import {connect} from 'react-redux'
-import {Link} from "react-router-dom"
+import {Link} from 'react-router-dom'
 import TagItem from './TagItem'
+import {getSelectIcon} from './icon'
 
 class TagSelector extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class TagSelector extends Component {
         this.toggleShow = this.toggleShow.bind(this)
         this.hide = this.hide.bind(this)
         this.clickOnBlankArea = this.clickOnBlankArea.bind(this)
-        document.onclick=this.hide
+        document.onclick = this.hide
     }
 
     tagChange(value) {
@@ -62,18 +63,23 @@ class TagSelector extends Component {
     }
 
     render() {
+        let classNameOfIcon = this.state.show ? "select-icon rotated" : "select-icon"
+        let classNameOfTagsContainer = this.state.show ? "playlist-tags-container" : "playlist-tags-container hidden"
+        let classNameOfMainTag = this.props.activeTag === '全部' ? "playlist-main-tag active-tag" : "playlist-main-tag"
         return (
             <div className="playlist-tags">
                 <span className="active-tag-name" >{this.props.activeTag}</span>
                 <span className="select-tag-button" onClick={this.toggleShow}>
                     {this.state.show ? '收起 ' : '展开 '}
-                    <svg className={this.state.show ? "select-icon rotated" : "select-icon"} viewBox="0 0 1024 1024">
-                        <path d="M127.5 330.9l0.7-0.7c12.3-12.3 32.4-12.3 44.7 0l339.9 339.9L853 330c12.5-12.5 32.9-12.5 45.4 0s12.5 32.9 0 45.4L536 737.8s-0.1 0.1-0.1 0.2l-0.7 0.7c-12.3 12.3-32.4 12.3-44.7 0l-363-363c-12.3-12.4-12.3-32.5 0-44.8z">
-                        </path>
-                    </svg>
+                    {getSelectIcon(classNameOfIcon)}
                 </span>
-                <div className={this.state.show ? "playlist-tags-container" : "playlist-tags-container hidden"} onClick={this.clickOnBlankArea}>
-                    <Link className={this.props.activeTag === '全部' ? "playlist-main-tag active-tag" : "playlist-main-tag"} to={{pathname: 'playlist', search: '?cat=全部&page=1'}} onClick={this.tagChange.bind(this, '全部')}>全部</Link>
+                <div className={classNameOfTagsContainer} onClick={this.clickOnBlankArea}>
+                    <Link className={classNameOfMainTag}
+                          to={{pathname: 'playlist', search: '?cat=全部&page=1'}}
+                          onClick={this.tagChange.bind(this, '全部')}
+                    >
+                        全部
+                    </Link>
                     {this.mainTags.map((value, index) => {
                         let theTagTabs = this.mapTagToMain[value]
                         return(

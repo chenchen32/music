@@ -8,7 +8,7 @@ import {
     playNextSong,
     toggleSongListWindow
 } from '../actions'
-import {timeFormat, getCurrentSongInfo} from '../../../utils'
+import {timeFormat, getCurrentSongInfo, changeImgResolution} from '../../../utils'
 import * as icon from './icon'
 
 class AudioController extends Component {
@@ -23,8 +23,8 @@ class AudioController extends Component {
         this.state = {
             currentTime: null,
             duration: null,
-            sliding: false,
-            hover: false,
+            isSliding: false,
+            isHovering: false,
         }
         this.audio = React.createRef()
         this.songSlider = React.createRef()
@@ -63,7 +63,7 @@ class AudioController extends Component {
             this.props.changeAudioStatus('pause')
         })
         a.addEventListener('timeupdate', () => {
-            if (!this.state.sliding) {
+            if (!this.state.isSliding) {
                 const {currentTime} = a
                 this.setState({
                     currentTime
@@ -166,9 +166,9 @@ class AudioController extends Component {
                 this.seek(event)
                 isRunning = false
             })
-            if (!this.state.sliding) {
+            if (!this.state.isSliding) {
                 this.setState({
-                    sliding: true
+                    isSliding: true
                 })
             }
         }
@@ -191,13 +191,13 @@ class AudioController extends Component {
         a.currentTime = this.state.currentTime
         this.parseLyricIndex(this.state.currentTime)
         this.setState({
-            sliding: false
+            isSliding: false
         })
     }
 
     handleHover() {
         this.setState({
-            hover: !this.state.hover
+            isHovering: !this.state.isHovering
         })
     }
 
@@ -227,6 +227,7 @@ class AudioController extends Component {
     render() {
         let {currentTime, duration} = this.state
         let {name, singer, pic, url} = this.props.currentSongInfo
+        pic = changeImgResolution(pic, 400)
         let playMode = this.props.playMode
         let playModeTitle = this.mapEnglishToChinese[playMode]
         return (
@@ -237,7 +238,7 @@ class AudioController extends Component {
                     <img src={pic} alt="专辑图片" />
                 </div>
                 <div className="extra-info-container">
-                    <div className={this.state.hover? "song-slider hover" : "song-slider"}
+                    <div className={this.state.isHovering? "song-slider hover" : "song-slider"}
                          onClick={this.clickToSeek}
                          onMouseOver={this.handleHover}
                          onMouseOut={this.handleHover}
