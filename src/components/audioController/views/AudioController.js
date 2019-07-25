@@ -196,9 +196,9 @@ class AudioController extends Component {
     }
 
     handleHover() {
-        this.setState({
-            isHovering: !this.state.isHovering
-        })
+        this.setState((state) => ({
+            isHovering: !state.isHovering,
+        }))
     }
 
     toggleSongList() {

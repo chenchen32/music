@@ -17,9 +17,9 @@ class AlbumDetail extends Component {
     }
 
     descriptionToggle() {
-        this.setState({
-            isAllDescriptionShowed: !this.state.isAllDescriptionShowed,
-        })
+        this.setState((state) => ({
+            isAllDescriptionShowed: !state.isAllDescriptionShowed,
+        }))
     }
 
     static dataCleaning(fetchedData) {

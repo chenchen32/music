@@ -41,9 +41,9 @@ class TagSelector extends Component {
     }
 
     toggleShow(e) {
-        this.setState({
-            show: !this.state.show
-        })
+        this.setState((state) => ({
+            show: !state.show,
+        }))
         if (e !== undefined) {
             e.nativeEvent.stopImmediatePropagation()
         }

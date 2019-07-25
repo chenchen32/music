@@ -14,11 +14,11 @@ const ajax = function(args, callback) {
         }
     }
     r.send(data)
+    return r
 }
 
 class Api {
     constructor() {
-        // this.baseUrl = 'https://api.itooi.cn/music/'
         this.baseUrl = 'https://v1.itooi.cn/'
     }
 
@@ -33,14 +33,13 @@ class Api {
             url,
             data: null,
         }
-        ajax(args, callback)
+        return ajax(args, callback)
     }
 }
 
-export class MusicApi extends Api {
+class MusicApi extends Api {
     searchResult(queryObj, callback) {
         let {input, pageSize, page, company} = {...queryObj}
-        // let path = `${company}/search?key=579621905&s=${input}&type=song&limit=${limit}&offset=${offset}`
         let path = `${company}/search?keyword=${input}&type=song&pageSize=${pageSize}&page=${(page - 1) * pageSize}`
         // 如果需要源数据，加上 &format=1
         this.get(path, callback)
@@ -48,7 +47,6 @@ export class MusicApi extends Api {
 
     hotPlayList(queryObj, callback) {
         let {category, pageSize, page, company} = {...queryObj}
-        // let path = `${company}/hotSongList?key=579621905&cat=${category}&limit=${limit}&offset=${offset}`
         let path = `${company}/songList/hot?categoryType=${category}&pageSize=${pageSize}&page=${(page - 1) * pageSize}`
         this.get(path, callback)
     }
@@ -56,7 +54,8 @@ export class MusicApi extends Api {
     albumDetailInfo(queryObj, callback) {
         let {albumId, company} = {...queryObj}
         let path = `${company}/songList?id=${albumId}`
-        this.get(path, callback)
+        let ajax = this.get(path, callback)
+        MusicApi.abortObj.albumDetail = ajax.abort.bind(ajax)
     }
 
     getLyric(lrcUrl, callback) {
@@ -67,4 +66,10 @@ export class MusicApi extends Api {
         let url = 'https://v1.itooi.cn/netease/banner'
         this.get(url, callback, true)
     }
+}
+
+MusicApi.abortObj = {}
+
+export {
+    MusicApi,
 }
