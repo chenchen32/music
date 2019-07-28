@@ -1,13 +1,13 @@
 {
-  "main.css": "/music/static/css/main.f950fc92.chunk.css",
-  "main.js": "/music/static/js/main.37856a43.chunk.js",
-  "main.js.map": "/music/static/js/main.37856a43.chunk.js.map",
+  "main.css": "/music/static/css/main.95556efe.chunk.css",
+  "main.js": "/music/static/js/main.8c5d1959.chunk.js",
+  "main.js.map": "/music/static/js/main.8c5d1959.chunk.js.map",
   "static/js/1.77f7a493.chunk.js": "/music/static/js/1.77f7a493.chunk.js",
   "static/js/1.77f7a493.chunk.js.map": "/music/static/js/1.77f7a493.chunk.js.map",
   "runtime~main.js": "/music/static/js/runtime~main.5604c427.js",
   "runtime~main.js.map": "/music/static/js/runtime~main.5604c427.js.map",
-  "static/css/main.f950fc92.chunk.css.map": "/music/static/css/main.f950fc92.chunk.css.map",
+  "static/css/main.95556efe.chunk.css.map": "/music/static/css/main.95556efe.chunk.css.map",
   "index.html": "/music/index.html",
-  "precache-manifest.97003ef6b31f1872c23bfd2b62c04b02.js": "/music/precache-manifest.97003ef6b31f1872c23bfd2b62c04b02.js",
+  "precache-manifest.3fa1dcd9806ca8da4f145d04e15fe0a9.js": "/music/precache-manifest.3fa1dcd9806ca8da4f145d04e15fe0a9.js",
   "service-worker.js": "/music/service-worker.js"
 }
