@@ -6,6 +6,7 @@ import SearchBar from './SearchBar'
 import SearchList from './SearchList'
 import {argsFromQuery} from '../../../utils'
 import './SearchPage.css'
+import Loading from "../../common/Loading"
 
 class SearchPage extends Component {
 
@@ -32,16 +33,12 @@ class SearchPage extends Component {
         switch (this.props.status) {
             case Status.LOADING: {
                 return (
-                    <div className="loading-container">
-                        <svg className="load" viewBox="25 25 50 50">
-                            <circle className="loading" cx="50" cy="50" r="20" fill="none"/>
-                        </svg>
-                    </div>
+                    <Loading />
                 )
             }
             case Status.SUCCESS: {
                 return (
-                        <SearchList />
+                    <SearchList />
                 )
             }
             case Status.FAILURE: {

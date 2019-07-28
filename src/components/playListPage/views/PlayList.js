@@ -6,6 +6,7 @@ import {withRouter} from 'react-router-dom'
 import PlayListItem from './PlayListItem'
 import {argsFromQuery} from '../../../utils'
 import PageSelector from '../../common/PageSelector'
+import Loading from "../../common/Loading"
 
 class PlayList extends Component {
     constructor(props) {
@@ -50,11 +51,7 @@ class PlayList extends Component {
         switch (this.props.status) {
             case Status.LOADING: {
                 return (
-                    <div className="loading-container">
-                        <svg className="load" viewBox="25 25 50 50">
-                            <circle className="loading" cx="50" cy="50" r="20" fill="none"/>
-                        </svg>
-                    </div>
+                    <Loading />
                 )
             }
             case Status.SUCCESS: {

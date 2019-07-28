@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="82a126b7-4083-4eed-90e3-d0e8e9ddbc85" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/common/Loading.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/audioController/views/MusicController.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/audioController/views/MusicController.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/audioController/views/SongList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/audioController/views/SongList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/common/PageSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/common/PageSelector.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/playListPage/views/TagSelector.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/playListPage/views/TagSelector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/playListPage/views/PlayList.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/playListPage/views/PlayList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/searchPage/views/SearchPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/searchPage/views/SearchPage.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -32,8 +32,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="13" column="27" lean-forward="true" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+            <state relative-caret-position="57">
+              <caret line="3" column="52" lean-forward="true" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/ModalPortal.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="199">
+              <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="15" selection-end-line="68" selection-end-column="36" />
+              <folding>
+                <element signature="e#0#38#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -45,39 +57,6 @@
               <caret line="52" column="33" lean-forward="true" selection-start-line="52" selection-start-column="33" selection-end-line="52" selection-end-column="33" />
               <folding>
                 <element signature="e#0#38#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/utils.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="116" column="21" lean-forward="true" selection-start-line="116" selection-start-column="21" selection-end-line="116" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Store.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-38">
-              <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-              <folding>
-                <element signature="e#0#68#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/playListPage/actions.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1254">
-              <caret line="67" selection-start-line="67" selection-end-line="67" />
-              <folding>
-                <element signature="e#0#44#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -134,7 +113,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/components/audioController/views/SongItem.js" />
         <option value="$PROJECT_DIR$/src/components/homePage/index.js" />
         <option value="$PROJECT_DIR$/src/components/homePage/actionTypes.js" />
         <option value="$PROJECT_DIR$/src/components/homePage/views/Home.js" />
@@ -150,19 +128,16 @@
         <option value="$PROJECT_DIR$/src/components/playListPage/actionTypes.js" />
         <option value="$PROJECT_DIR$/src/components/playListPage/reducer.js" />
         <option value="$PROJECT_DIR$/src/components/playListPage/views/TagItem.js" />
-        <option value="$PROJECT_DIR$/src/components/searchPage/views/SearchPage.js" />
         <option value="$PROJECT_DIR$/src/components/searchPage/views/SearchList.js" />
         <option value="$PROJECT_DIR$/src/components/homePage/actions.js" />
         <option value="$PROJECT_DIR$/src/components/playListPage/actions.js" />
         <option value="$PROJECT_DIR$/src/components/playListPage/views/PlayListItem.js" />
         <option value="$PROJECT_DIR$/src/components/searchPage/views/SearchPage.css" />
-        <option value="$PROJECT_DIR$/src/components/App.css" />
         <option value="$PROJECT_DIR$/src/components/playListPage/views/playListPage.css" />
         <option value="$PROJECT_DIR$/src/components/albumDetail/views/albumDetail.css" />
         <option value="$PROJECT_DIR$/src/components/common/common.css" />
         <option value="$PROJECT_DIR$/src/components/homePage/views/ImageSlider.js" />
         <option value="$PROJECT_DIR$/src/components/Menu.js" />
-        <option value="$PROJECT_DIR$/src/components/playListPage/views/PlayList.js" />
         <option value="$PROJECT_DIR$/src/components/audioController/actionTypes.js" />
         <option value="$PROJECT_DIR$/src/components/audioController/actions.js" />
         <option value="$PROJECT_DIR$/src/components/audioController/views/icon.js" />
@@ -180,11 +155,15 @@
         <option value="$PROJECT_DIR$/src/components/playListPage/views/AlbumDetail.js" />
         <option value="$PROJECT_DIR$/src/components/App.js" />
         <option value="$PROJECT_DIR$/src/components/common/PageSelector.js" />
-        <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/components/playListPage/views/TagSelector.js" />
         <option value="$PROJECT_DIR$/src/components/audioController/views/MusicController.css" />
         <option value="$PROJECT_DIR$/src/components/audioController/views/SongList.js" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/components/playListPage/views/PlayList.js" />
+        <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/src/components/common/Loading.js" />
+        <option value="$PROJECT_DIR$/src/components/App.css" />
+        <option value="$PROJECT_DIR$/src/components/searchPage/views/SearchPage.js" />
       </list>
     </option>
   </component>
@@ -248,7 +227,14 @@
               <item name="music" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="audioController" type="462c0819:PsiDirectoryNode" />
+              <item name="searchPage" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="music" type="b2602c69:ProjectViewProjectNode" />
+              <item name="music" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="searchPage" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -470,7 +456,7 @@
       <workItem from="1564023679974" duration="3884000" />
       <workItem from="1564042619700" duration="174000" />
       <workItem from="1564043955433" duration="932000" />
-      <workItem from="1564219383696" duration="8588000" />
+      <workItem from="1564219383696" duration="12876000" />
     </task>
     <task id="LOCAL-00001" summary="第三次提交">
       <created>1553327427937</created>
@@ -563,11 +549,18 @@
       <option name="project" value="LOCAL" />
       <updated>1564024056487</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="代码规范">
+      <created>1564290601576</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1564290601576</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="852199000" />
+    <option name="totallyTimeSpent" value="856487000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -612,7 +605,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="代码规范" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/PageSelector.js" />
     <entry file="file://$PROJECT_DIR$/src/components/searchPage/actions.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -740,13 +732,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/App.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="21" lean-forward="true" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/playListPage.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="283">
@@ -829,36 +814,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/AlbumDetail.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/ModalPortal.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="22" column="47" lean-forward="true" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/PlayList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/PlayListItem.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="463">
@@ -908,26 +863,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/searchPage/views/SearchList.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/searchPage/views/SearchPage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="489">
-          <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="380">
@@ -955,13 +890,6 @@
           <folding>
             <element signature="e#0#38#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="23" column="78" selection-start-line="23" selection-start-column="78" selection-end-line="23" selection-end-column="78" />
         </state>
       </provider>
     </entry>
@@ -1036,10 +964,84 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/AlbumDetail.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="19" column="21" selection-start-line="19" selection-start-column="21" selection-end-line="19" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/ModalPortal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="68" column="36" lean-forward="true" selection-start-line="68" selection-start-column="15" selection-end-line="68" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="31" column="9" lean-forward="true" selection-start-line="31" selection-start-column="9" selection-end-line="31" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="10" column="18" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/searchPage/views/SearchList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="969">
+          <caret line="97" column="15" selection-start-line="97" selection-start-column="15" selection-end-line="97" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/common/Loading.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" column="52" selection-start-line="4" selection-start-column="52" selection-end-line="4" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/searchPage/views/SearchPage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="617">
+          <caret line="39" column="24" lean-forward="true" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/playListPage/views/PlayList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1197">
+          <caret line="12" column="20" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="13" column="27" lean-forward="true" selection-start-line="13" selection-start-column="27" selection-end-line="13" selection-end-column="27" />
+        <state relative-caret-position="57">
+          <caret line="3" column="52" lean-forward="true" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
         </state>
       </provider>
     </entry>
