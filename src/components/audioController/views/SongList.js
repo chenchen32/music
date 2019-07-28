@@ -4,17 +4,27 @@ import SongItem from './SongItem'
 import {getCurrentSongInfo, changeImgResolution} from '../../../utils'
 
 class SongList extends Component {
-    static scrollLyricList(div, currentLyricIndex) {
-        if (div !== null) {
-            let {height} = div.getBoundingClientRect()
-            let i = Math.floor(height / 46 / 2)
-            div.scrollTop = currentLyricIndex * 46 - 46 * i
+    constructor(props) {
+        super(props)
+        this.list = React.createRef()
+    }
+
+    getTheActiveLyricOffset() {
+        const list = this.list.current
+        let activeLyric = document.querySelector('.active')
+        if (activeLyric !== null) {
+            let {height} = list.getBoundingClientRect()
+            let i = Math.floor(height / 40 / 2)
+            list.scrollTop = activeLyric.offsetTop - 40 * i
         }
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.getTheActiveLyricOffset()
+    }
+
     render() {
-        let defaultPic = "http://s4.music.126.net/style/web2/img/default/default_album.jpg"
-        let picUrl = this.props.currentSongInfo.pic || defaultPic
+        let picUrl = this.props.currentSongInfo.pic
         picUrl = changeImgResolution(picUrl, 800)
         let {currentLyric, currentLyricIndex} = this.props.currentSongExtraInfo
         let length = this.props.songList.length
@@ -40,7 +50,7 @@ class SongList extends Component {
                             return <SongItem key={index} songIndex={index} songInfo={value}/>
                     })}
                 </div>
-                <div className="lyric-list" ref={(div) => {SongList.scrollLyricList(div, currentLyricIndex)}}>
+                <div className="lyric-list" ref={this.list}>
                     {
                         currentLyric.map((value, index) => {
                             if (value.translatedLyric === null) {

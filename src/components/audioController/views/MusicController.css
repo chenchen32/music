@@ -309,7 +309,9 @@ body::-webkit-scrollbar-thumb {
     font-size: 15px;
     text-align: center;
     width: 80%;
-    min-height: 46px;
+    min-height: 40px;
+    line-height: 40px;
+    height: auto !important;
     margin: 0 auto;
     color: rgba(200, 200, 200, 0.8);
 }

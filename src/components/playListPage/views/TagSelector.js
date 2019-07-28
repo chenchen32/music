@@ -57,7 +57,7 @@ class TagSelector extends Component {
 
     componentWillUnmount(){
         this.setState = () => {
-            return 0
+            return false
         }
     //  防止组件卸载的时候调用 setState 导致 react 报错
     }

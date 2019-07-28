@@ -9,8 +9,8 @@ class PageSelector extends Component {
         this.isPreviousAndNextCanBeClicked = this.isPreviousAndNextCanBeClicked.bind(this)
     }
 
-    static getPageSelector (endPage, currentPage, tagCount) {
-        if (endPage <= tagCount) {
+    static getPageSelector (endPage, currentPage, totalTagCount) {
+        if (endPage <= totalTagCount) {
             let result = []
             for (let i = 1; i <= endPage; i++) {
                 result.push(i)
@@ -20,7 +20,7 @@ class PageSelector extends Component {
         let list = []
         let lastList = []
         let startList = []
-        let changingTagCount = tagCount - 3
+        let changingTagCount = totalTagCount - 3
         let start = currentPage - changingTagCount/ 2
         let end = currentPage + changingTagCount / 2
         for (let i = start; i <= end; i++) {
@@ -77,22 +77,22 @@ class PageSelector extends Component {
 
     isPreviousAndNextCanBeClicked() {
         let {totalPage, currentPage} = {...this.props.selectorInfo}
-        let previousCanBeClicked = false
-        let nextCanBeClicked = false
+        let previousCanNotBeClicked = false
+        let nextCanNotBeClicked = false
         if (totalPage === 1) {
-            previousCanBeClicked = true
-            nextCanBeClicked = true
+            previousCanNotBeClicked = true
+            nextCanNotBeClicked = true
         }
         if (currentPage === 1) {
-            previousCanBeClicked = true
+            previousCanNotBeClicked = true
         } else if (currentPage === totalPage) {
-            nextCanBeClicked = true
+            nextCanNotBeClicked = true
         }
-        let previousClassName = previousCanBeClicked ? 'previous-ban-click' : 'previous-can-click'
-        let nextClassName = nextCanBeClicked ? 'next-ban-click' : 'next-can-click'
+        let previousClassName = previousCanNotBeClicked ? 'previous-ban-click' : 'previous-can-click'
+        let nextClassName = nextCanNotBeClicked ? 'next-ban-click' : 'next-can-click'
         return {
-            previousCanBeClicked,
-            nextCanBeClicked,
+            previousCanNotBeClicked,
+            nextCanNotBeClicked,
             previousClassName,
             nextClassName,
         }
@@ -101,12 +101,12 @@ class PageSelector extends Component {
     render() {
         let {currentPage} = {...this.props.selectorInfo}
         let previousAndNext = this.isPreviousAndNextCanBeClicked()
-        let {previousCanBeClicked, nextCanBeClicked, previousClassName, nextClassName} = {...previousAndNext}
+        let {previousCanNotBeClicked, nextCanNotBeClicked, previousClassName, nextClassName} = {...previousAndNext}
         return (
             <div className="page-selector">
-                <button className={`${previousClassName} page-btn`} disabled={previousCanBeClicked} onClick={this.handleChangePage(currentPage - 1)}>&lt;</button>
+                <button className={`${previousClassName} page-btn`} disabled={previousCanNotBeClicked} onClick={this.handleChangePage(currentPage - 1)}>&lt;</button>
                 {this.showMiddleTag()}
-                <button className={`${nextClassName} page-btn`} disabled={nextCanBeClicked} onClick={this.handleChangePage(currentPage + 1)}>&gt;</button>
+                <button className={`${nextClassName} page-btn`} disabled={nextCanNotBeClicked} onClick={this.handleChangePage(currentPage + 1)}>&gt;</button>
             </div>
         )
     }
