@@ -7,7 +7,7 @@ body {
   width: calc(100vw - 150px);
   min-width: 980px;
   height: calc(100vh - 150px);
-  margin: 50px auto;
+  margin: 30px auto;
   border-radius: 10px;
   background: white;
   text-align: center;
