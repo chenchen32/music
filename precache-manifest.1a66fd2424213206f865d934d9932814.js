@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "858cd5bc13835d58f911",
-    "url": "/music/static/css/main.46619717.chunk.css"
+    "revision": "2606e0807227bb5bf62a",
+    "url": "/music/static/css/main.1e51b215.chunk.css"
   },
   {
-    "revision": "858cd5bc13835d58f911",
-    "url": "/music/static/js/main.858cd5bc.chunk.js"
+    "revision": "2606e0807227bb5bf62a",
+    "url": "/music/static/js/main.2606e080.chunk.js"
   },
   {
     "revision": "77f7a49382e7fc314648",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/music/static/js/runtime~main.5604c427.js"
   },
   {
-    "revision": "041b7a5dad6b46b48a037f242c134efd",
+    "revision": "eafacb98566c25172e0e67bf5c241fed",
     "url": "/music/index.html"
   }
 ];
