@@ -23,9 +23,10 @@ class AudioController extends Component {
         this.state = {
             currentTime: null,
             duration: null,
-            isSliding: false,
             isHovering: false,
         }
+        this.coolDown = false
+        this.isSliding = false
         this.audio = React.createRef()
         this.songSlider = React.createRef()
         this.playOrPause = this.playOrPause.bind(this)
@@ -63,7 +64,7 @@ class AudioController extends Component {
             this.props.changeAudioStatus('pause')
         })
         a.addEventListener('timeupdate', () => {
-            if (!this.state.isSliding) {
+            if (!this.isSliding) {
                 const {currentTime} = a
                 this.setState({
                     currentTime
@@ -145,32 +146,18 @@ class AudioController extends Component {
             let currentTime = clickPosition * a.duration
             if (!isNaN(currentTime)) {
                 a.currentTime = currentTime
-                this.parseLyricIndex(currentTime)
-            } else {
-                return false
             }
         }
     }
 
-    dragToSeek() {
-        let isRunning = false
-        let isFirstDrag = true
-        return (event) => {
-            event.persist()
-            if (isRunning || isFirstDrag ) {
-                isFirstDrag = false
-                return
-            }
-            isRunning = true
-            window.requestAnimationFrame(() => {
-                this.seek(event)
-                isRunning = false
-            })
-            if (!this.state.isSliding) {
-                this.setState({
-                    isSliding: true
-                })
-            }
+    dragToSeek(event) {
+        if (!this.coolDown) {
+            this.seek(event)
+            this.isSliding = true
+            this.coolDown = true
+            setTimeout(() => {
+                this.coolDown = false
+            }, 25)
         }
     }
 
@@ -189,10 +176,7 @@ class AudioController extends Component {
     AfterDragToSeek() {
         const a = this.audio.current
         a.currentTime = this.state.currentTime
-        this.parseLyricIndex(this.state.currentTime)
-        this.setState({
-            isSliding: false
-        })
+        this.isSliding = false
     }
 
     handleHover() {
@@ -248,7 +232,7 @@ class AudioController extends Component {
                         </div>
                         <div className="slider-progress" style={{width: `${ currentTime / duration * 100 }%`}}>
                         <span className="slider-point" draggable="true"
-                              onDrag={this.dragToSeek()}
+                              onDrag={this.dragToSeek}
                               onDragEnd={this.AfterDragToSeek}
                         >
                         </span>
