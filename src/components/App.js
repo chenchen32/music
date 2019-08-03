@@ -14,7 +14,7 @@ class App extends Component {
     render() {
         return (
             // BrowserRouter 会使用 HTML5 的 history API 渲染单页路由
-            <Router>
+            <Router basename={process.env.PUBLIC_URL}>
                 <React.Fragment>
                     <Menu />
                     {/*Router 只能有一个子元素 也可以放一个 Switch 组件*/}

@@ -61,7 +61,7 @@ nav {
 .nav-container {
   position: absolute;
   right: calc((100% - 1190px) / 2);
-  width: 264px;
+  width: 265px;
   margin: 0;
   padding: 0;
 }

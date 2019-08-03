@@ -22,7 +22,18 @@ class Api {
         this.baseUrl = 'https://v1.itooi.cn/'
     }
 
-    get(path, callback, isPathEqualToUrl) {
+    registerAbort(name, ajax) {
+        MusicApi.abortObj[name] = ajax.abort.bind(ajax)
+    }
+
+    abortRequest(abortName) {
+        let isRequesting = MusicApi.abortObj[abortName] !== undefined
+        if (isRequesting) {
+            MusicApi.abortObj[abortName]()
+        }
+    }
+
+    get(path, callback, abortName, isPathEqualToUrl) {
         let method = 'GET'
         let url = this.baseUrl + path
         if (isPathEqualToUrl) {
@@ -33,7 +44,9 @@ class Api {
             url,
             data: null,
         }
-        return ajax(args, callback)
+        this.abortRequest(abortName)
+        let request = ajax(args, callback)
+        this.registerAbort(abortName, request)
     }
 }
 
@@ -42,29 +55,33 @@ class MusicApi extends Api {
         let {input, pageSize, page, company} = {...queryObj}
         let path = `${company}/search?keyword=${input}&type=song&pageSize=${pageSize}&page=${(page - 1) * pageSize}`
         // 如果需要源数据，加上 &format=1
-        this.get(path, callback)
+        let abortName = 'searchResult'
+        this.get(path, callback, abortName)
     }
 
     hotPlayList(queryObj, callback) {
         let {category, pageSize, page, company} = {...queryObj}
         let path = `${company}/songList/hot?categoryType=${category}&pageSize=${pageSize}&page=${(page - 1) * pageSize}`
-        this.get(path, callback)
+        let abortName = 'hotPlayList'
+        this.get(path, callback, abortName)
     }
 
     albumDetailInfo(queryObj, callback) {
         let {albumId, company} = {...queryObj}
         let path = `${company}/songList?id=${albumId}`
-        let ajax = this.get(path, callback)
-        MusicApi.abortObj.albumDetail = ajax.abort.bind(ajax)
+        let abortName = 'albumDetail'
+        this.get(path, callback, abortName)
     }
 
     getLyric(lrcUrl, callback) {
-        this.get(lrcUrl, callback, true)
+        let abortName = 'getLyric'
+        this.get(lrcUrl, callback, abortName, true)
     }
 
     getImgInHomePage(callback) {
         let url = 'https://v1.itooi.cn/netease/banner'
-        this.get(url, callback, true)
+        let abortName = 'getImgInHomePage'
+        this.get(url, callback, abortName, true)
     }
 }
 

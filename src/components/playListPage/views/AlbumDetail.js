@@ -13,7 +13,7 @@ class AlbumDetail extends Component {
         }
 
         this.descriptionToggle = this.descriptionToggle.bind(this)
-        this.getSelectorInfo = this.getSelectorInfo.bind(this)
+        this.getPageSelectorInfo = this.getPageSelectorInfo.bind(this)
     }
 
     descriptionToggle() {
@@ -36,7 +36,7 @@ class AlbumDetail extends Component {
         }
     }
 
-    getSelectorInfo() {
+    getPageSelectorInfo() {
         let totalPage = Math.ceil(this.props.albumDetailInfo.data.trackCount / this.props.albumPageSize)
         return {
             totalPage,
@@ -82,7 +82,7 @@ class AlbumDetail extends Component {
                         return <SearchItem key={index} index={index} result={AlbumDetail.dataCleaning(value)}/>
                     })}
                 </div>
-                <PageSelector selectorInfo={this.getSelectorInfo()} changePage={this.props.changePage} />
+                <PageSelector selectorInfo={this.getPageSelectorInfo()} changePage={this.props.changePage} />
             </div>
         )
     }

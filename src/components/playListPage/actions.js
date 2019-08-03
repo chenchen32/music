@@ -19,9 +19,12 @@ export const loadItemDetailSuccess = (albumDetailInfo) => ({
 })
 
 // 删除歌单具体信息，即初始化模态弹窗
-export const deleteItemDetail = () => ({
+export const deleteItemDetail = () => {
+    MusicApi.abortObj.albumDetail()
+    return {
     type: playList.DELETE_ITEM_DETAIL,
-})
+    }
+}
 
 // 热门歌单列表开始加载
 export const playListLoadStarted = () => ({

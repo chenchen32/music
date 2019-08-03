@@ -31,12 +31,14 @@ class AudioController extends Component {
         this.songSlider = React.createRef()
         this.playOrPause = this.playOrPause.bind(this)
         this.clickToSeek = this.clickToSeek.bind(this)
-        this.dragToSeek = this.dragToSeek.bind(this)
-        this.AfterDragToSeek = this.AfterDragToSeek.bind(this)
+        this.mouseDownToSeek = this.mouseDownToSeek.bind(this)
+        this.mouseMoveToSeek = this.mouseMoveToSeek.bind(this)
+        this.afterSeek = this.afterSeek.bind(this)
         this.handleHover = this.handleHover.bind(this)
         this.changePlayMode = this.changePlayMode.bind(this)
         this.changeToPlayNextSong = this.changeToPlayNextSong.bind(this)
         this.toggleSongList = this.toggleSongList.bind(this)
+        this.getAudioControllerClassName = this.getAudioControllerClassName.bind(this)
     }
 
     componentDidMount() {
@@ -84,6 +86,7 @@ class AudioController extends Component {
         if (this.isFirstLoad && this.props.lengthOfSongList === 0) {
             this.isFirstLoad = false
         }
+        document.body.addEventListener('mouseup', this.afterSeek)
     }
 
     getNextLyricIndex(currentTime, data, deltaTime) {
@@ -150,10 +153,16 @@ class AudioController extends Component {
         }
     }
 
-    dragToSeek(event) {
+    mouseDownToSeek() {
+        this.isSliding = true
+    }
+
+    mouseMoveToSeek(event) {
+        if (!this.isSliding) {
+            return
+        }
         if (!this.coolDown) {
             this.seek(event)
-            this.isSliding = true
             this.coolDown = true
             setTimeout(() => {
                 this.coolDown = false
@@ -173,10 +182,12 @@ class AudioController extends Component {
         }
     }
 
-    AfterDragToSeek() {
-        const a = this.audio.current
-        a.currentTime = this.state.currentTime
-        this.isSliding = false
+    afterSeek() {
+        if (this.isSliding) {
+            const a = this.audio.current
+            a.currentTime = this.state.currentTime
+            this.isSliding = false
+        }
     }
 
     handleHover() {
@@ -208,14 +219,22 @@ class AudioController extends Component {
         }
     }
 
+    getAudioControllerClassName() {
+        let init = "audio-controller"
+        let show = this.props.showSongListWindow ? "playlist-opened" : ""
+        let sliding = this.isSliding ? "sliding" : ""
+        return [init, show, sliding].join(' ')
+    }
+
     render() {
         let {currentTime, duration} = this.state
+        let percentage = (currentTime / duration).toFixed(3) * 100
         let {name, singer, pic, url} = this.props.currentSongInfo
         pic = changeImgResolution(pic, 400)
         let playMode = this.props.playMode
         let playModeTitle = this.mapEnglishToChinese[playMode]
         return (
-            <div className={this.props.showSongListWindow ? "audio-controller playlist-opened" : "audio-controller"}>
+            <div className={this.getAudioControllerClassName()} onMouseMove={this.mouseMoveToSeek}>
                 <audio src={url} ref={this.audio}>
                 </audio>
                 <div className="album-cover">
@@ -230,11 +249,8 @@ class AudioController extends Component {
                     >
                         <div className="slider-bg">
                         </div>
-                        <div className="slider-progress" style={{width: `${ currentTime / duration * 100 }%`}}>
-                        <span className="slider-point" draggable="true"
-                              onDrag={this.dragToSeek}
-                              onDragEnd={this.AfterDragToSeek}
-                        >
+                        <div className="slider-progress" style={{width: `${percentage}%`}}>
+                        <span className="slider-point" onMouseDown={this.mouseDownToSeek}>
                         </span>
                         </div>
                     </div>

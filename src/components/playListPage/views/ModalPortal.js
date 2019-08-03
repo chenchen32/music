@@ -5,7 +5,6 @@ import {deleteItemDetail} from '../actions'
 import * as Status from '../status'
 import {loadingIcon} from '../../common/icon'
 import AlbumDetail from './AlbumDetail'
-import {MusicApi} from '../../../api/api'
 
 class ModalPortal extends Component {
     constructor(props) {
@@ -26,10 +25,6 @@ class ModalPortal extends Component {
 
     deleteDetailInfo() {
         this.props.deleteItemDetail()
-        let abort = MusicApi.abortObj.albumDetail
-        if (abort !== null) {
-            abort()
-        }
     }
 
     showAlbumList() {

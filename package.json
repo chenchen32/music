@@ -1,7 +1,7 @@
 {
   "name": "music-player",
   "version": "0.1.0",
-  "homepage": "https://chenchen32.github.io/music/",
+  "homepage": "https://chenchen32.github.io/music",
   "private": true,
   "dependencies": {
     "react": "^16.7.0",
