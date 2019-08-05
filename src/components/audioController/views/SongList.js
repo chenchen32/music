@@ -25,7 +25,7 @@ class SongList extends Component {
 
     render() {
         let picUrl = this.props.currentSongInfo.pic
-        picUrl = changeImgResolution(picUrl, 800)
+        picUrl = changeImgResolution(picUrl, 400)
         let {currentLyric, currentLyricIndex} = this.props.currentSongExtraInfo
         let length = this.props.songList.length
         return (

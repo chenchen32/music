@@ -21,14 +21,18 @@ class AudioController extends Component {
         }
         this.isFirstLoad = true
         this.state = {
-            currentTime: null,
+            volume: 1,
+            currentTime: 0,
             duration: null,
-            isHovering: false,
+            isHoverOnSongSlider: false,
+            isHoverOnVolumeBtn: false,
         }
-        this.coolDown = false
+        // this.coolDown = false
         this.isSliding = false
+        this.isVolumeSliding = false
         this.audio = React.createRef()
         this.songSlider = React.createRef()
+        this.volumeSlider = React.createRef()
         this.playOrPause = this.playOrPause.bind(this)
         this.clickToSeek = this.clickToSeek.bind(this)
         this.mouseDownToSeek = this.mouseDownToSeek.bind(this)
@@ -38,7 +42,11 @@ class AudioController extends Component {
         this.changePlayMode = this.changePlayMode.bind(this)
         this.changeToPlayNextSong = this.changeToPlayNextSong.bind(this)
         this.toggleSongList = this.toggleSongList.bind(this)
-        this.getAudioControllerClassName = this.getAudioControllerClassName.bind(this)
+        this.hoverVolumeBtn = this.hoverVolumeBtn.bind(this)
+        this.mouseDownToChange = this.mouseDownToChange.bind(this)
+        this.mouseMoveToChange = this.mouseMoveToChange.bind(this)
+        this.afterChange = this.afterChange.bind(this)
+        this.bindHotKey = this.bindHotKey.bind(this)
     }
 
     componentDidMount() {
@@ -87,6 +95,23 @@ class AudioController extends Component {
             this.isFirstLoad = false
         }
         document.body.addEventListener('mouseup', this.afterSeek)
+        document.body.addEventListener('mouseup', this.afterChange)
+        window.addEventListener('keydown', this.bindHotKey)
+    }
+
+    bindHotKey(event) {
+        let tagName = event.target.tagName
+        if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+            return
+        }
+        let {key, ctrlKey} = event
+        if (key === 'p' || key === 'P') {
+            this.playOrPause()
+        } else if (ctrlKey && key === 'ArrowRight') {
+            this.changeToPlayNextSong(1)()
+        } else if (ctrlKey && key === 'ArrowLeft') {
+            this.changeToPlayNextSong(-1)()
+        }
     }
 
     getNextLyricIndex(currentTime, data, deltaTime) {
@@ -155,25 +180,39 @@ class AudioController extends Component {
 
     mouseDownToSeek() {
         this.isSliding = true
+        document.body.classList.add('sliding')
     }
 
+    // 自己写的节流方案
+    // mouseMoveToSeek(event) {
+    //     if (!this.isSliding) {
+    //         return
+    //     }
+    //     let clientX = event.clientX
+    //     if (!this.coolDown) {
+    //         this.seek(clientX)
+    //         this.coolDown = true
+    //         setTimeout(() => {
+    //             this.coolDown = false
+    //         }, 12)
+    //     }
+    // }
+
+    // 使用 api 来做到节流
     mouseMoveToSeek(event) {
         if (!this.isSliding) {
             return
         }
-        if (!this.coolDown) {
-            this.seek(event)
-            this.coolDown = true
-            setTimeout(() => {
-                this.coolDown = false
-            }, 25)
-        }
+        let clientX = event.clientX
+        window.requestAnimationFrame(() => {
+            this.seek(clientX)
+        })
     }
 
-    seek(event) {
+    seek(clientX) {
         const a = this.audio.current
         let {left, width} = this.songSlider.current.getBoundingClientRect()
-        let dragPosition = (event.clientX - left) / width
+        let dragPosition = (clientX - left) / width
         if (dragPosition >= 0 && dragPosition <= 1) {
             let currentTime = a.duration * dragPosition
             this.setState({
@@ -187,12 +226,54 @@ class AudioController extends Component {
             const a = this.audio.current
             a.currentTime = this.state.currentTime
             this.isSliding = false
+            document.body.classList.remove('sliding')
+        }
+    }
+
+    mouseDownToChange() {
+        this.isVolumeSliding = true
+        document.body.classList.add('sliding')
+    }
+
+    mouseMoveToChange(event) {
+        if (!this.isVolumeSliding) {
+            return
+        }
+        let clientX = event.clientX
+        window.requestAnimationFrame(() => {
+            this.change(clientX)
+        })
+    }
+
+    change(clientX) {
+        const a = this.audio.current
+        let {left, width} = this.volumeSlider.current.getBoundingClientRect()
+        let dragPosition = (clientX - left) / width
+        if (dragPosition >= 0 && dragPosition <= 1) {
+            let volume = dragPosition
+            this.setState({
+                volume
+            })
+            a.volume = volume
+        }
+    }
+
+    afterChange() {
+        if (this.isVolumeSliding) {
+            this.isVolumeSliding = false
+            document.body.classList.remove('sliding')
         }
     }
 
     handleHover() {
         this.setState((state) => ({
-            isHovering: !state.isHovering,
+            isHoverOnSongSlider: !state.isHoverOnSongSlider,
+        }))
+    }
+
+    hoverVolumeBtn() {
+        this.setState((state) => ({
+            isHoverOnVolumeBtn: !state.isHoverOnVolumeBtn,
         }))
     }
 
@@ -219,29 +300,24 @@ class AudioController extends Component {
         }
     }
 
-    getAudioControllerClassName() {
-        let init = "audio-controller"
-        let show = this.props.showSongListWindow ? "playlist-opened" : ""
-        let sliding = this.isSliding ? "sliding" : ""
-        return [init, show, sliding].join(' ')
-    }
-
     render() {
-        let {currentTime, duration} = this.state
-        let percentage = (currentTime / duration).toFixed(3) * 100
+        let {currentTime, duration, volume} = this.state
+        let songPercentage = (currentTime / duration).toFixed(3) * 100
         let {name, singer, pic, url} = this.props.currentSongInfo
         pic = changeImgResolution(pic, 400)
         let playMode = this.props.playMode
         let playModeTitle = this.mapEnglishToChinese[playMode]
         return (
-            <div className={this.getAudioControllerClassName()} onMouseMove={this.mouseMoveToSeek}>
+            <div className={this.props.showSongListWindow ? "playlist-opened audio-controller" : "audio-controller"}
+                 onMouseMove={this.mouseMoveToSeek}
+            >
                 <audio src={url} ref={this.audio}>
                 </audio>
                 <div className="album-cover">
                     <img src={pic} alt="专辑图片" />
                 </div>
                 <div className="extra-info-container">
-                    <div className={this.state.isHovering? "song-slider hover" : "song-slider"}
+                    <div className={this.state.isHoverOnSongSlider? "song-slider hover" : "song-slider"}
                          onClick={this.clickToSeek}
                          onMouseOver={this.handleHover}
                          onMouseOut={this.handleHover}
@@ -249,9 +325,9 @@ class AudioController extends Component {
                     >
                         <div className="slider-bg">
                         </div>
-                        <div className="slider-progress" style={{width: `${percentage}%`}}>
-                        <span className="slider-point" onMouseDown={this.mouseDownToSeek}>
-                        </span>
+                        <div className="slider-progress" style={{width: `${songPercentage}%`}}>
+                            <div className="slider-point" onMouseDown={this.mouseDownToSeek}>
+                            </div>
                         </div>
                     </div>
                     <span className="music-timeline">
@@ -267,19 +343,40 @@ class AudioController extends Component {
                         <span className="back-btn" title="上一首(ctrl+←)" onClick={this.changeToPlayNextSong(-1)}>
                             {icon.previousBtn}
                         </span>
-                        <span className={["play-btn", this.props.AudioStatus].join(' ')} title="播放/暂停(p)" onClick={this.playOrPause}>
+                        <span className={["play-btn", this.props.AudioStatus].join(' ')}
+                              title="播放/暂停(p)"
+                              onClick={this.playOrPause}
+                        >
                             {icon.getPlayButtonSvg(this.props.AudioStatus)}
                         </span>
                         <span className="next-btn" title="下一首(ctrl+→)" onClick={this.changeToPlayNextSong(1)}>
                             {icon.nextBtn}
                         </span>
-                        <span className="volume-btn icon">
+                        <span className="volume-btn icon" onClick={this.hoverVolumeBtn}>
                             {icon.volumeBtn}
+                            <div className={this.state.isHoverOnVolumeBtn ? "volume-bar" : "volume-bar none-width"}
+                                 onMouseMove={this.mouseMoveToChange}
+                            >
+                                <div className="volume-slider" ref={this.volumeSlider}>
+                                    <div className="slider-progress" style={{width: `${volume * 100}%`}}>
+                                        <div className={this.state.isHoverOnVolumeBtn ? "slider-point" : "hidden"}
+                                             onMouseDown={this.mouseDownToChange}
+                                        >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </span>
-                        <span className={`mode-btn icon ${playMode}`} data-mode={playMode} title={playModeTitle} onClick={this.changePlayMode}>
+                        <span className={this.state.isHoverOnVolumeBtn ? "hidden" : `mode-btn icon ${playMode}`}
+                              data-mode={playMode} title={playModeTitle}
+                              onClick={this.changePlayMode}
+                        >
                             {icon.getModeButtonSvg(playMode)}
                         </span>
-                        <span className="list-btn icon" title="播放列表" onClick={this.toggleSongList}>
+                        <span className={this.state.isHoverOnVolumeBtn ? "hidden" : "list-btn icon"}
+                              title="播放列表"
+                              onClick={this.toggleSongList}
+                        >
                             {icon.listBtn}
                         </span>
                     </div>
