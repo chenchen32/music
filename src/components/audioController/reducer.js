@@ -128,6 +128,15 @@ export default (state, action) => {
                 },
             }
         }
+        // case audioController.GET_SONG: {
+        //     return {
+        //         ...state,
+        //         currentSongExtraInfo: {
+        //             ...state.currentSongExtraInfo,
+        //             url: action.url,
+        //         }
+        //     }
+        // }
         case audioController.GET_LYRIC: {
             return {
                 ...state,

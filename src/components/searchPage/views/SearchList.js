@@ -25,6 +25,7 @@ class SearchList extends Component {
             pic: data.al.picUrl,
             lrc: `https://v1.itooi.cn/netease/lrc?id=${id}`,
             url:`https://v1.itooi.cn/netease/url?id=${id}`,
+            copyright: data.privilege.fl !== 0,
         }
     }
 

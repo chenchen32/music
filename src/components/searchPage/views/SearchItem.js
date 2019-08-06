@@ -16,6 +16,10 @@ class SearchItem extends Component {
     }
 
     handlePlay() {
+        if (!this.props.result.copyright) {
+            alert('无版权，不能播放')
+            return
+        }
         if (this.props.currentSongId !== this.props.result.id) {
             this.props.playTheSongInPage(this.props.result)
             console.log('this.props.songInfo，第一次放', this.props.result)
@@ -59,6 +63,10 @@ class SearchItem extends Component {
     }
 
     handleAppend() {
+        if (!this.props.result.copyright) {
+            alert('无版权，不能播放')
+            return
+        }
         this.props.appendTheSong(this.props.result)
     }
 
@@ -72,7 +80,8 @@ class SearchItem extends Component {
                 <span className="search-item-number">{`${this.props.index + 1}.`}</span>
                 <div className="search-item-name">
                     <span className="song-name" title={result.name}>{result.name}</span>
-                    <span className="search-item-play" onClick={isTheSongPlaying ? this.handlePause : this.handlePlay}>
+                    <span className="search-item-play"
+                          onClick={isTheSongPlaying ? this.handlePause : this.handlePlay}>
                         {this.getPlayOrPauseButtonSvg()}
                     </span>
                     <span className="search-item-append" onClick={this.handleAppend}>

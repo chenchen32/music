@@ -73,6 +73,11 @@ class MusicApi extends Api {
         this.get(path, callback, abortName)
     }
 
+    // getSong() {
+    //     let abortName = 'getSong'
+    //     this.get()
+    // }
+
     getLyric(lrcUrl, callback) {
         let abortName = 'getLyric'
         this.get(lrcUrl, callback, abortName, true)

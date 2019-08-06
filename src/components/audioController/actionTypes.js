@@ -10,6 +10,8 @@ export const PLAY_THE_SONG_IN_LIST = 'LIST/PLAY_THE_SONG'
 
 export const PLAY_NEXT_SONG = 'AUDIO/PLAY_NEXT_SONG'
 
+// export const GET_SONG = 'AUDIO/GET_AUDIO'
+
 export const GET_LYRIC = 'AUDIO/GET_LYRIC'
 
 export const GET_CURRENT_INDEX = 'AUDIO/GET_CURRENT_INDEX'

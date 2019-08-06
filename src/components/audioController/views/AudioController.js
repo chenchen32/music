@@ -43,6 +43,7 @@ class AudioController extends Component {
         this.changeToPlayNextSong = this.changeToPlayNextSong.bind(this)
         this.toggleSongList = this.toggleSongList.bind(this)
         this.hoverVolumeBtn = this.hoverVolumeBtn.bind(this)
+        this.clickToChange = this.clickToChange.bind(this)
         this.mouseDownToChange = this.mouseDownToChange.bind(this)
         this.mouseMoveToChange = this.mouseMoveToChange.bind(this)
         this.afterChange = this.afterChange.bind(this)
@@ -97,6 +98,11 @@ class AudioController extends Component {
         document.body.addEventListener('mouseup', this.afterSeek)
         document.body.addEventListener('mouseup', this.afterChange)
         window.addEventListener('keydown', this.bindHotKey)
+        a.addEventListener('error', (event) => {
+            if (event.target.error.code === 4) {
+
+            }
+        })
     }
 
     bindHotKey(event) {
@@ -230,6 +236,22 @@ class AudioController extends Component {
         }
     }
 
+    clickToChange(event) {
+        const a = this.audio.current
+        let target = event.target
+        if (!target.classList.contains('slider-point')) {
+            let { left, width } = event.currentTarget.getBoundingClientRect()
+            let clickPosition = (event.clientX - left) / width
+            let volume = clickPosition.toFixed(2)
+            if (!isNaN(volume)) {
+                this.setState({
+                    volume
+                })
+                a.volume = volume
+            }
+        }
+    }
+
     mouseDownToChange() {
         this.isVolumeSliding = true
         document.body.classList.add('sliding')
@@ -250,7 +272,7 @@ class AudioController extends Component {
         let {left, width} = this.volumeSlider.current.getBoundingClientRect()
         let dragPosition = (clientX - left) / width
         if (dragPosition >= 0 && dragPosition <= 1) {
-            let volume = dragPosition
+            let volume = dragPosition.toFixed(2)
             this.setState({
                 volume
             })
@@ -352,12 +374,12 @@ class AudioController extends Component {
                         <span className="next-btn" title="下一首(ctrl+→)" onClick={this.changeToPlayNextSong(1)}>
                             {icon.nextBtn}
                         </span>
-                        <span className="volume-btn icon" onClick={this.hoverVolumeBtn}>
+                        <span className="volume-btn icon" title={`音量：${volume * 100}`} onClick={this.hoverVolumeBtn}>
                             {icon.volumeBtn}
                             <div className={this.state.isHoverOnVolumeBtn ? "volume-bar" : "volume-bar none-width"}
                                  onMouseMove={this.mouseMoveToChange}
                             >
-                                <div className="volume-slider" ref={this.volumeSlider}>
+                                <div className="volume-slider" ref={this.volumeSlider} onClick={this.clickToChange}>
                                     <div className="slider-progress" style={{width: `${volume * 100}%`}}>
                                         <div className={this.state.isHoverOnVolumeBtn ? "slider-point" : "hidden"}
                                              onMouseDown={this.mouseDownToChange}

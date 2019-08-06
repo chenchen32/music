@@ -65,12 +65,27 @@ export const playNextSong = (modeType, loopStep=1) => {
     }
 }
 
+// export const getSong = (songUrl) => ({
+//     type: audioController.GET_SONG,
+//     songUrl,
+// })
+
 export const getLyric = (lyric) => {
     return {
         type: audioController.GET_LYRIC,
         lyric,
     }
 }
+
+// export const getSongUrlFromNet = (url) => {
+//     return (dispatch) => {
+//         let api = new MusicApi()
+//         api.getSong(url, (r) => {
+//             let songUrl = JSON.parse(r.response).data
+//             dispatch(getSong(songUrl))
+//         })
+//     }
+// }
 
 export const getLyricFromNet = (lrcUrl) => {
     return (dispatch) => {
