@@ -354,14 +354,12 @@ body::-webkit-scrollbar-thumb {
 .song-list-item-play {
     position: relative;
     float: right;
-    top: 5px;
     right: 50px;
 }
 
 .song-list-item-delete {
     position: relative;
     float: right;
-    top: 5px;
     right: 0;
 }
 

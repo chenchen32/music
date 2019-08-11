@@ -62,24 +62,19 @@ class ImageSlider extends Component {
         return(
             <div className='image-slider' onMouseOver={this.stopAutoPlay} onMouseOut={this.autoPlay}>
                 <button className='slide-button slide-left vertical-center' onClick={this.handlerNextImage} data-step="-1">&lt;</button>
-                {/*<div className='image-slider-container' style={{width: widthOfSlider, height: heightOfSlider, left: offset}}>*/}
                 <div className='image-slider-container' style={{width: widthOfSlider, height: heightOfSlider, transform: `translate3d(${offset}px, 0px, 0px)`}}>
                     {
-                        images.map((value, index) => {
-                            return (
-                                <img key={index} src={value.picUrl} alt="轮播图" />
-                            )
-                        })
+                        images.map((value, index) => (
+                            <img key={index} src={value.picUrl} alt="轮播图" />
+                        ))
                     }
                 </div>
                 <button className='slide-button slide-right vertical-center' onClick={this.handlerNextImage} data-step="1">&gt;</button>
                 <div className='slide-point-container'>
                     {
-                        images.map((value, index) => {
-                            return (
-                                <span className={this.getClassNameOfPoints(index)} key={index} data-index={index} onClick={this.handlerClickPoint}> </span>
-                            )
-                        })
+                        images.map((value, index) => (
+                            <span className={this.getClassNameOfPoints(index)} key={index} data-index={index} onClick={this.handlerClickPoint}> </span>
+                        ))
                     }
                 </div>
             </div>

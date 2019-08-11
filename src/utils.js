@@ -141,6 +141,20 @@ export const argsFromQuery = (query) => {
 }
 
 export const changeImgResolution = (url, pixel) => {
+    if (!url) {
+        return url
+    }
     let list = url.split('?')
     return `${list[0]}?param=${pixel}y${pixel}`
+}
+
+export const parseClass = (classNames) => {
+    let classNameList = []
+    for (let c of Object.keys(classNames)) {
+        let isExist = classNames[c]
+        if (isExist) {
+            classNameList.push(c)
+        }
+    }
+    return classNameList.join(' ')
 }

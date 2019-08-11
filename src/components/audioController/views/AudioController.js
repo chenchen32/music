@@ -8,7 +8,7 @@ import {
     playNextSong,
     toggleSongListWindow
 } from '../actions'
-import {timeFormat, getCurrentSongInfo, changeImgResolution} from '../../../utils'
+import {timeFormat, getCurrentSongInfo, changeImgResolution, parseClass} from '../../../utils'
 import * as icon from './icon'
 
 class AudioController extends Component {
@@ -220,7 +220,11 @@ class AudioController extends Component {
         let {left, width} = this.songSlider.current.getBoundingClientRect()
         let dragPosition = (clientX - left) / width
         if (dragPosition >= 0 && dragPosition <= 1) {
-            let currentTime = a.duration * dragPosition
+            let currentTime = Number((a.duration * dragPosition).toFixed(2))
+            let noSongLoad = isNaN(a.duration)
+            if (noSongLoad) {
+                currentTime = 0
+            }
             this.setState({
                 currentTime
             })
@@ -329,8 +333,20 @@ class AudioController extends Component {
         pic = changeImgResolution(pic, 400)
         let playMode = this.props.playMode
         let playModeTitle = this.mapEnglishToChinese[playMode]
+        let classNameOfController = parseClass({
+            'audio-controller': true,
+            'playlist-opened': this.props.showSongListWindow,
+        })
+        let classNameOfSongSlider = parseClass({
+            'song-slider': true,
+            'hover': this.state.isHoverOnSongSlider,
+        })
+        let classNameOfVolumeSlider = parseClass({
+            'volume-bar': true,
+            'none-width': !this.state.isHoverOnVolumeBtn,
+        })
         return (
-            <div className={this.props.showSongListWindow ? "playlist-opened audio-controller" : "audio-controller"}
+            <div className={classNameOfController}
                  onMouseMove={this.mouseMoveToSeek}
             >
                 <audio src={url} ref={this.audio}>
@@ -339,7 +355,7 @@ class AudioController extends Component {
                     <img src={pic} alt="专辑图片" />
                 </div>
                 <div className="extra-info-container">
-                    <div className={this.state.isHoverOnSongSlider? "song-slider hover" : "song-slider"}
+                    <div className={classNameOfSongSlider}
                          onClick={this.clickToSeek}
                          onMouseOver={this.handleHover}
                          onMouseOut={this.handleHover}
@@ -376,7 +392,7 @@ class AudioController extends Component {
                         </span>
                         <span className="volume-btn icon" title={`音量：${volume * 100}`} onClick={this.hoverVolumeBtn}>
                             {icon.volumeBtn}
-                            <div className={this.state.isHoverOnVolumeBtn ? "volume-bar" : "volume-bar none-width"}
+                            <div className={classNameOfVolumeSlider}
                                  onMouseMove={this.mouseMoveToChange}
                             >
                                 <div className="volume-slider" ref={this.volumeSlider} onClick={this.clickToChange}>
@@ -389,7 +405,7 @@ class AudioController extends Component {
                                 </div>
                             </div>
                         </span>
-                        <span className={this.state.isHoverOnVolumeBtn ? "hidden" : `mode-btn icon ${playMode}`}
+                        <span className={this.state.isHoverOnVolumeBtn ? "hidden" : `mode-btn icon`}
                               data-mode={playMode} title={playModeTitle}
                               onClick={this.changePlayMode}
                         >

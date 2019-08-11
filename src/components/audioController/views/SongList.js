@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import SongItem from './SongItem'
-import {getCurrentSongInfo, changeImgResolution} from '../../../utils'
+import {getCurrentSongInfo, changeImgResolution, parseClass} from '../../../utils'
 
 class SongList extends Component {
     constructor(props) {
@@ -28,8 +28,12 @@ class SongList extends Component {
         picUrl = changeImgResolution(picUrl, 400)
         let {currentLyric, currentLyricIndex} = this.props.currentSongExtraInfo
         let length = this.props.songList.length
+        let classNameOfSongList = parseClass({
+            'song-list': true,
+            'hidden': !this.props.showSongListWindow,
+        })
         return (
-            <div className={this.props.showSongListWindow ? "song-list" : "song-list hidden"}>
+            <div className={classNameOfSongList}>
                 <div className="song-list-bg">
                 </div>
                 <div className="song-list-img" style={{backgroundImage: `url(${picUrl})`}}>
@@ -53,11 +57,15 @@ class SongList extends Component {
                 <div className="lyric-list" ref={this.list}>
                     {
                         currentLyric.map((value, index) => {
+                            let classNameOfLyric = parseClass({
+                                'lyric-item': true,
+                                'active': currentLyricIndex === index,
+                            })
                             if (value.translatedLyric === null) {
-                                return <p className={(currentLyricIndex === index)? "lyric-item active" : "lyric-item"} key={index}>{value.lyric}</p>
+                                return <p className={classNameOfLyric} key={index}>{value.lyric}</p>
                             } else {
                                 return (
-                                    <p className={(currentLyricIndex === index)? "lyric-item active" : "lyric-item"} key={index}>
+                                    <p className={classNameOfLyric} key={index}>
                                         {value.lyric}<br/>
                                         {value.translatedLyric}
                                     </p>

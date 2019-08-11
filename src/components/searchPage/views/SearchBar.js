@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import  {inputChange} from '../actions'
 import {withRouter} from "react-router-dom"
-import {argsFromQuery} from "../../../utils"
+import {argsFromQuery, parseClass} from "../../../utils"
 
 class SearchBar extends Component {
     constructor(props) {
@@ -74,8 +74,12 @@ class SearchBar extends Component {
     }
 
     render() {
+        let classNameOfBar = parseClass({
+            'search-bar-container': true,
+            'before-searched': this.props.searchResult === undefined,
+        })
         return(
-            <div className={(this.props.searchResult === undefined) ? "search-bar-container before-searched" : "search-bar-container"}>
+            <div className={classNameOfBar}>
                 <input type="text" className="search-bar-input" placeholder="搜索音乐、MV、歌单、用户" onChange={this.onChange} onKeyDown={this.onKeyPress} value={this.value || ''}/>
                 <button className="search-bar-button" onClick={this.onSearch}>搜索</button>
             </div>

@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import TagItem from './TagItem'
 import {getSelectIcon} from './icon'
+import {parseClass} from "../../../utils"
 
 class TagSelector extends Component {
     constructor(props) {
@@ -63,9 +64,18 @@ class TagSelector extends Component {
     }
 
     render() {
-        let classNameOfIcon = this.state.show ? "select-icon rotated" : "select-icon"
-        let classNameOfTagsContainer = this.state.show ? "playlist-tags-container" : "playlist-tags-container hidden"
-        let classNameOfMainTag = this.props.activeTag === '全部' ? "playlist-main-tag active-tag" : "playlist-main-tag"
+        let classNameOfIcon = parseClass({
+            'select-icon': true,
+            'rotated': this.state.show,
+        })
+        let classNameOfTagsContainer = parseClass({
+            'playlist-tags-container': true,
+            'hidden': !this.state.show
+        })
+        let classNameOfMainTag = parseClass({
+            'playlist-main-tag': true,
+            'active-tag': this.props.activeTag === '全部',
+        })
         return (
             <div className="playlist-tags">
                 <span className="active-tag-name" >{this.props.activeTag}</span>

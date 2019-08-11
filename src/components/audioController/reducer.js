@@ -1,5 +1,6 @@
 import * as audioController from './actionTypes'
 import {saveSongToLocalStorage, deleteSongInLocalStorage, saveCurrentSongIndexInLocalStorage} from "../../utils"
+import {message} from "../common/message"
 
 export default (state, action) => {
     switch (action.type) {
@@ -22,6 +23,10 @@ export default (state, action) => {
             if (isTheSongNotExisted) {
                 cloneList.push(action.songInfo)
                 saveSongToLocalStorage(action.songInfo)
+                message.success('添加成功', 2000)
+            } else {
+
+                message.warning('歌曲已存在', 2000)
             }
             return {
                 ...state,
@@ -113,6 +118,9 @@ export default (state, action) => {
             }
             let step = mapModeTypeToNextStep[modeType]
             let nextSongIndex = (currentSongIndex + step + LengthOfSongList) % LengthOfSongList
+            if (currentSongIndex === -1) {
+                nextSongIndex = -1
+            }
             let currentLyric = []
             if (nextSongIndex === currentSongIndex) {
                 currentLyric = state.currentSongExtraInfo.currentLyric

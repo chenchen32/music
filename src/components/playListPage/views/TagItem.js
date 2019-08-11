@@ -14,31 +14,14 @@ class TagItem extends Component {
         return this.props.activeTag === value ? "playlist-tag active-tag" : "playlist-tag"
     }
 
-    getTagTable(i) {
-        let rowData = this.props.theTagTabs.slice(i, i + 6)
-        return (
-            <tbody key={i}>
-                <tr>
-                    {rowData.map((value, index) => {
-                        return (
-                            <td key={index} className={this.getClassName(value)}>
-                                <Link  to={`/playlist?cat=${value}`} onClick={this.tagChange.bind(this, value)}>{value}</Link>
-                            </td>
-                        )
-                    })}
-                </tr>
-            </tbody>
-         )
-    }
-
     render() {
         return (
             <div className="playlist-tag-tabs">
-                {this.props.theTagTabs.map((value, index) => {
-                    return (
-                            <Link key={index} className={this.getClassName(value)} to={`/playlist?cat=${value}&page=1`} onClick={this.tagChange.bind(this, value)}>{value}</Link>
-                    )
-                })}
+                {
+                    this.props.theTagTabs.map((value, index) => (
+                        <Link key={index} className={this.getClassName(value)} to={`/playlist?cat=${value}&page=1`} onClick={this.tagChange.bind(this, value)}>{value}</Link>
+                    ))
+                }
             </div>
         )
     }

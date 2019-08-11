@@ -1,4 +1,10 @@
+.vertical-middle {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .svg-list-icon {
+    float: right;
     width: 20px;
     height: 20px;
     fill: rgb(200, 200, 200);
@@ -84,14 +90,12 @@
 .search-item-play {
     position: relative;
     float: right;
-    top: 5px;
     right: 20px;
 }
 
 .search-item-append {
     position: relative;
     float: right;
-    top: 5px;
     right: 30px;
 }
 

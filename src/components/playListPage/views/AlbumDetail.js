@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {changeImgResolution} from '../../../utils'
+import {changeImgResolution, parseClass} from '../../../utils'
 import {SearchItem} from '../../searchPage'
 import PageSelector from '../../common/PageSelector'
 import {albumChangePage} from '../actions'
@@ -33,6 +33,8 @@ class AlbumDetail extends Component {
             pic: fetchedData.album.blurPicUrl,
             lrc: `https://v1.itooi.cn/netease/lrc?id=${fetchedData.id}`,
             url: `https://v1.itooi.cn/netease/url?id=${fetchedData.id}`,
+            // copyright: fetchedData.privilege.fl !== 0,
+            copyright: true,
         }
     }
 
@@ -55,8 +57,14 @@ class AlbumDetail extends Component {
         let dataOfShowedAlbums = data.tracks.slice(start, end)
 
         let {isAllDescriptionShowed} = this.state
-        let classNameOfAlbumInfo = isAllDescriptionShowed ? "album-list-info all-description-showed" : "album-list-info"
-        let classNameOfDescription = isAllDescriptionShowed ? "album-list-description all-description-showed" : "album-list-description"
+        let classNameOfAlbumInfo = parseClass({
+            'album-list-info': true,
+            'all-description-showed': isAllDescriptionShowed,
+        })
+        let classNameOfDescription = parseClass({
+            'album-list-description': true,
+            'all-description-showed': isAllDescriptionShowed,
+        })
         return (
             <div className="album-list-container">
                 <div className={classNameOfAlbumInfo}>

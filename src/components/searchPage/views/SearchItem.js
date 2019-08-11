@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import {getCurrentSongInfo, timeFormat} from '../../../utils'
+import {getCurrentSongInfo, parseClass, timeFormat} from '../../../utils'
 import {connect} from 'react-redux'
 import {actions} from '../../audioController/'
+import {message} from '../../common/message/'
 
-const appendTheSong = actions.appendTheSong
-const playTheSongInPage = actions.playTheSongInPage
+const {appendTheSong, playTheSongInPage} = actions
 
 class SearchItem extends Component {
     constructor(props) {
@@ -17,12 +17,13 @@ class SearchItem extends Component {
 
     handlePlay() {
         if (!this.props.result.copyright) {
-            alert('无版权，不能播放')
+            message.warning('该歌曲不能播放', 2000)
             return
         }
         if (this.props.currentSongId !== this.props.result.id) {
             this.props.playTheSongInPage(this.props.result)
-            console.log('this.props.songInfo，第一次放', this.props.result)
+            message.success('开始播放', 2000)
+            console.log('本歌曲第一次放')
         } else {
             let audio = document.querySelector('audio')
             audio.play()
@@ -64,38 +65,42 @@ class SearchItem extends Component {
 
     handleAppend() {
         if (!this.props.result.copyright) {
-            alert('无版权，不能播放')
+            message.warning('该歌曲不能播放', 2000)
             return
         }
         this.props.appendTheSong(this.props.result)
     }
 
     render() {
-        let result = this.props.result
-        let id = this.props.result.id
+        let {id, name, singer, time} = this.props.result
         let isTheSongPlaying = (this.props.AudioStatus === 'play') && (this.props.currentSongId === id)
         let isOdd = (this.props.index + 1) % 2 !== 0
+        let color = !this.props.result.copyright ? '#aaa' : ''
+        let classNameOfItem = parseClass({
+            'search-item-container': true,
+            'odd': isOdd,
+        })
         return(
-            <div className={isOdd ? "search-item-container odd" : "search-item-container"}>
+            <div className={classNameOfItem} style={{color: `${color}`}}>
                 <span className="search-item-number">{`${this.props.index + 1}.`}</span>
                 <div className="search-item-name">
-                    <span className="song-name" title={result.name}>{result.name}</span>
-                    <span className="search-item-play"
+                    <span className="song-name" title={name}>{name}</span>
+                    <span className="search-item-play vertical-middle"
                           onClick={isTheSongPlaying ? this.handlePause : this.handlePlay}>
                         {this.getPlayOrPauseButtonSvg()}
                     </span>
-                    <span className="search-item-append" onClick={this.handleAppend}>
+                    <span className="search-item-append vertical-middle" onClick={this.handleAppend}>
                         <svg className="svg-list-icon" viewBox="0 0 1024 1024">
-                        <path d="M197.3 197.3c-173.8 173.8-173.8 455.5 0 629.3s455.5 173.8 629.3 0 173.8-455.5 0-629.3-455.5-173.7-629.3 0zM907 512c0 51.3-9.7 101.3-28.9 148.7-19.9 49-49.1 92.9-86.8 130.6s-81.7 66.9-130.6 86.8C613.3 897.3 563.3 907 512 907c-51.3 0-101.3-9.7-148.7-28.9-49-19.9-92.9-49.1-130.6-86.8s-66.9-81.7-86.8-130.6C126.7 613.3 117 563.3 117 512c0-51.3 9.7-101.3 28.9-148.7 19.9-49 49.1-92.9 86.8-130.6s81.7-66.9 130.6-86.8C410.7 126.7 460.7 117 512 117c51.3 0 101.3 9.7 148.7 28.9 49 19.9 92.9 49.1 130.6 86.8s66.9 81.7 86.8 130.6C897.3 410.7 907 460.7 907 512zM537 262v225h225v50H537v225h-50V537H262v-50h225V262h50z">
-                        </path>
+                            <path d="M197.3 197.3c-173.8 173.8-173.8 455.5 0 629.3s455.5 173.8 629.3 0 173.8-455.5 0-629.3-455.5-173.7-629.3 0zM907 512c0 51.3-9.7 101.3-28.9 148.7-19.9 49-49.1 92.9-86.8 130.6s-81.7 66.9-130.6 86.8C613.3 897.3 563.3 907 512 907c-51.3 0-101.3-9.7-148.7-28.9-49-19.9-92.9-49.1-130.6-86.8s-66.9-81.7-86.8-130.6C126.7 613.3 117 563.3 117 512c0-51.3 9.7-101.3 28.9-148.7 19.9-49 49.1-92.9 86.8-130.6s81.7-66.9 130.6-86.8C410.7 126.7 460.7 117 512 117c51.3 0 101.3 9.7 148.7 28.9 49 19.9 92.9 49.1 130.6 86.8s66.9 81.7 86.8 130.6C897.3 410.7 907 460.7 907 512zM537 262v225h225v50H537v225h-50V537H262v-50h225V262h50z">
+                            </path>
                         </svg>
                     </span>
                 </div>
                 <div className="search-item-singer name">
-                    <span title={result.singer}>{result.singer}</span>
+                    <span title={singer}>{singer}</span>
                 </div>
                 <div className="search-item-time">
-                    {timeFormat(result.time)}
+                    {timeFormat(time)}
                 </div>
             </div>
         )
